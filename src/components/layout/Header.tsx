@@ -19,7 +19,7 @@ export const Header = ({ onMenuClick }: HeaderProps) => {
           <Menu className="h-5 w-5" />
         </Button>
         <div className="ml-4 flex items-center gap-4">
-          <h1 className="font-heading text-xl font-bold text-primary">
+          <h1 className="font-heading text-base md:text-xl font-bold text-primary">
             Nanjil Career Academy
           </h1>
         </div>
