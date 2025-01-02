@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Award, Book, Clock, TestTube2 } from "lucide-react";
+import { Award, Book, Clock, TestTube2, Target } from "lucide-react";
 import {
   Select,
   SelectContent,
