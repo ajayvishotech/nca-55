@@ -1,8 +1,40 @@
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Award, Clock, Target } from "lucide-react";
+import { Book, CheckSquare, BarChart2, PlusCircle } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+
+const courses = [
+  {
+    id: "upsc",
+    name: "UPSC CSE-GS",
+    stats: {
+      materialsCompleted: "45/80",
+      mockTestsTaken: "12",
+      overallProgress: 65,
+    },
+  },
+  {
+    id: "tnpsc",
+    name: "TNPSC",
+    stats: {
+      materialsCompleted: "30/50",
+      mockTestsTaken: "8",
+      overallProgress: 55,
+    },
+  },
+];
 
 const Index = () => {
+  const [selectedCourse, setSelectedCourse] = useState(courses[0]);
+
   return (
     <div className="space-y-6 animate-fadeIn">
       <div className="flex flex-col gap-4">
@@ -12,68 +44,75 @@ const Index = () => {
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card className="p-6 card-hover">
-          <div className="flex items-center gap-4">
-            <div className="rounded-full bg-primary/10 p-3">
-              <Target className="h-6 w-6 text-primary" />
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Course Progress</p>
-              <p className="text-2xl font-bold">65%</p>
-            </div>
-          </div>
-          <Progress value={65} className="mt-4" />
-        </Card>
-
-        <Card className="p-6 card-hover">
-          <div className="flex items-center gap-4">
-            <div className="rounded-full bg-secondary/10 p-3">
-              <Clock className="h-6 w-6 text-secondary" />
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Study Time</p>
-              <p className="text-2xl font-bold">12.5h</p>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="p-6 card-hover">
-          <div className="flex items-center gap-4">
-            <div className="rounded-full bg-accent/10 p-3">
-              <Award className="h-6 w-6 text-accent" />
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Mock Test Score</p>
-              <p className="text-2xl font-bold">85%</p>
-            </div>
-          </div>
-        </Card>
-      </div>
-
       <Card className="p-6">
-        <h2 className="font-heading text-xl font-semibold mb-4">
-          Recent Activity
-        </h2>
-        <div className="space-y-4">
-          <div className="flex items-center gap-4 p-4 rounded-lg bg-gray-50">
-            <div className="rounded-full bg-primary/10 p-2">
-              <Target className="h-4 w-4 text-primary" />
-            </div>
-            <div>
-              <p className="font-medium">Completed UPSC Mock Test</p>
-              <p className="text-sm text-muted-foreground">2 hours ago</p>
-            </div>
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="font-heading text-xl font-semibold">My Goals</h2>
+            <Select
+              value={selectedCourse.id}
+              onValueChange={(value) => {
+                const course = courses.find((c) => c.id === value);
+                if (course) setSelectedCourse(course);
+              }}
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select course" />
+              </SelectTrigger>
+              <SelectContent>
+                {courses.map((course) => (
+                  <SelectItem key={course.id} value={course.id}>
+                    {course.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          <div className="flex items-center gap-4 p-4 rounded-lg bg-gray-50">
-            <div className="rounded-full bg-secondary/10 p-2">
-              <Clock className="h-4 w-4 text-secondary" />
-            </div>
-            <div>
-              <p className="font-medium">Studied Indian History</p>
-              <p className="text-sm text-muted-foreground">5 hours ago</p>
-            </div>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            <Card className="p-4 bg-gray-50/50">
+              <div className="flex items-center gap-3">
+                <div className="rounded-full bg-primary/10 p-2">
+                  <Book className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Materials Completed</p>
+                  <p className="text-lg font-semibold">{selectedCourse.stats.materialsCompleted}</p>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-4 bg-gray-50/50">
+              <div className="flex items-center gap-3">
+                <div className="rounded-full bg-secondary/10 p-2">
+                  <CheckSquare className="h-5 w-5 text-secondary" />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Mock Tests Taken</p>
+                  <p className="text-lg font-semibold">{selectedCourse.stats.mockTestsTaken}</p>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-4 bg-gray-50/50">
+              <div className="flex items-center gap-3">
+                <div className="rounded-full bg-accent/10 p-2">
+                  <BarChart2 className="h-5 w-5 text-accent" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm text-muted-foreground">Overall Progress</p>
+                  <div className="flex items-center gap-2">
+                    <Progress value={selectedCourse.stats.overallProgress} className="flex-1" />
+                    <span className="text-sm font-medium">{selectedCourse.stats.overallProgress}%</span>
+                  </div>
+                </div>
+              </div>
+            </Card>
           </div>
+
+          <Button variant="outline" className="w-full">
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Add another goal
+          </Button>
         </div>
       </Card>
     </div>
