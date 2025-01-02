@@ -1,4 +1,4 @@
-import { Book, Home, TestTube, Newspaper, MessageCircleQuestion } from "lucide-react";
+import { Book, Home, TestTube, Newspaper } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
@@ -7,7 +7,6 @@ const navigation = [
   { name: "Study Materials", href: "/materials", icon: Book },
   { name: "Current Affairs", href: "/current-affairs", icon: Newspaper },
   { name: "Mock Tests", href: "/mock-tests", icon: TestTube },
-  { name: "Doubts & Solutions", href: "/doubts", icon: MessageCircleQuestion },
 ];
 
 interface SidebarProps {
