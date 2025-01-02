@@ -6,6 +6,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -27,6 +34,16 @@ export const Header = ({ onMenuClick }: HeaderProps) => {
           <h1 className="font-heading text-base md:text-xl font-bold text-primary hover:scale-105 transition-transform duration-200 cursor-default">
             Nanjil Career Academy
           </h1>
+          <Select defaultValue="upsc">
+            <SelectTrigger className="w-[180px] bg-gray-50">
+              <SelectValue placeholder="Select course" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="upsc">UPSC CSE - GS</SelectItem>
+              <SelectItem value="tnpsc">TNPSC</SelectItem>
+              <SelectItem value="add">+ Add another goal</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <div className="ml-auto flex items-center gap-4">
           <Button 

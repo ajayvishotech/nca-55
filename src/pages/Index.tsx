@@ -1,13 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Award, Book, Clock, TestTube2, Target } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Book, Clock, TestTube2, Target } from "lucide-react";
 
 const Index = () => {
   return (
@@ -16,15 +9,6 @@ const Index = () => {
         <div>
           <h1 className="font-heading text-2xl font-bold">Welcome back, Student!</h1>
         </div>
-        <Select defaultValue="upsc">
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select course" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="upsc">UPSC CSE - GS</SelectItem>
-            <SelectItem value="tnpsc">TNPSC</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
 
       <div className="grid gap-4 md:grid-cols-4">
@@ -76,12 +60,6 @@ const Index = () => {
           </div>
           <Progress value={65} className="mt-4" />
         </Card>
-      </div>
-
-      <div className="flex justify-center">
-        <button className="text-primary hover:text-primary/80 transition-colors duration-200 flex items-center gap-2">
-          <span className="text-lg">+</span> Add another goal
-        </button>
       </div>
     </div>
   );
