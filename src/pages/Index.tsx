@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Award, Book, Clock, Target } from "lucide-react";
+import { Award, Book, Clock, TestTube2 } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -58,7 +58,7 @@ const Index = () => {
         <Card className="p-6 card-hover">
           <div className="flex items-center gap-4">
             <div className="rounded-full bg-purple-100 p-3">
-              <TestTube className="h-6 w-6 text-purple-600" />
+              <TestTube2 className="h-6 w-6 text-purple-600" />
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Mock Tests Taken</p>
