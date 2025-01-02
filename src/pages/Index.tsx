@@ -15,9 +15,6 @@ const Index = () => {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="font-heading text-2xl font-bold">Welcome back, Student!</h1>
-          <p className="text-muted-foreground">
-            Track your UPSC preparation progress
-          </p>
         </div>
         <Select defaultValue="upsc">
           <SelectTrigger className="w-[180px]">
