@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Materials from "./pages/Materials";
 import CurrentAffairs from "./pages/CurrentAffairs";
 import MockTests from "./pages/MockTests";
+import Doubts from "./pages/Doubts";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
             <Route path="/materials" element={<Materials />} />
             <Route path="/current-affairs" element={<CurrentAffairs />} />
             <Route path="/mock-tests" element={<MockTests />} />
+            <Route path="/doubts" element={<Doubts />} />
           </Routes>
         </DashboardLayout>
       </TooltipProvider>
