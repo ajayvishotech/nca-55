@@ -4,6 +4,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useState } from "react";
+import ChapterPreview from "./ChapterPreview";
 
 interface SubjectItemProps {
   subject: {
@@ -16,6 +18,12 @@ interface SubjectItemProps {
 }
 
 const SubjectItem = ({ subject }: SubjectItemProps) => {
+  const [selectedChapter, setSelectedChapter] = useState<string | null>(null);
+
+  const handleChapterClick = (chapterName: string) => {
+    setSelectedChapter(chapterName);
+  };
+
   return (
     <AccordionItem value={subject.title}>
       <AccordionTrigger className="hover:no-underline py-0">
@@ -34,7 +42,7 @@ const SubjectItem = ({ subject }: SubjectItemProps) => {
             <div
               key={item.name}
               className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg cursor-pointer group"
-              onClick={() => ChapterPreview({ chapter: item.name })}
+              onClick={() => handleChapterClick(item.name)}
             >
               <span className="text-sm text-gray-600">{item.name}</span>
               <div className="flex items-center gap-2 text-sm text-gray-500">
@@ -44,6 +52,7 @@ const SubjectItem = ({ subject }: SubjectItemProps) => {
             </div>
           ))}
         </div>
+        {selectedChapter && <ChapterPreview chapter={selectedChapter} />}
       </AccordionContent>
     </AccordionItem>
   );
