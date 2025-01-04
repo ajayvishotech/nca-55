@@ -15,7 +15,7 @@ const Index = () => {
         <Card className="p-6 card-hover">
           <div className="flex items-center gap-4">
             <div className="rounded-full bg-blue-100 p-3">
-              <Clock className="h-6 w-6 text-blue-600" />
+              <Clock className="h-6 w-6 text-blue-600 animate-[spin_3s_linear_infinite]" />
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Study Hours</p>
@@ -27,7 +27,7 @@ const Index = () => {
         <Card className="p-6 card-hover">
           <div className="flex items-center gap-4">
             <div className="rounded-full bg-green-100 p-3">
-              <Book className="h-6 w-6 text-green-600" />
+              <Book className="h-6 w-6 text-green-600 animate-[bounce_1s_ease-in-out_infinite]" />
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Materials Completed</p>
@@ -39,7 +39,7 @@ const Index = () => {
         <Card className="p-6 card-hover">
           <div className="flex items-center gap-4">
             <div className="rounded-full bg-purple-100 p-3">
-              <TestTube2 className="h-6 w-6 text-purple-600" />
+              <TestTube2 className="h-6 w-6 text-purple-600 animate-[wiggle_1s_ease-in-out_infinite]" />
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Mock Tests Taken</p>
@@ -48,9 +48,9 @@ const Index = () => {
           </div>
         </Card>
 
-        <Card className="p-6 card-hover">
+        <Card className="p-6 card-hover group">
           <div className="flex items-center gap-4">
-            <div className="rounded-full bg-orange-100 p-3">
+            <div className="rounded-full bg-orange-100 p-3 group-hover:scale-110 transition-transform duration-300">
               <Target className="h-6 w-6 text-orange-600" />
             </div>
             <div>
@@ -58,7 +58,7 @@ const Index = () => {
               <p className="text-2xl font-bold">65%</p>
             </div>
           </div>
-          <Progress value={65} className="mt-4" />
+          <Progress value={65} className="mt-4 animate-pulse" />
         </Card>
       </div>
     </div>

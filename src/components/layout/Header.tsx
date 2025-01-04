@@ -35,7 +35,7 @@ export const Header = ({ onMenuClick }: HeaderProps) => {
             Nanjil Career Academy
           </h1>
           <Select defaultValue="upsc">
-            <SelectTrigger className="w-[180px] bg-gray-50">
+            <SelectTrigger className="w-[150px] h-9 bg-white border-gray-200 hover:bg-gray-50 data-[state=open]:bg-primary data-[state=open]:text-white transition-colors duration-200">
               <SelectValue placeholder="Select course" />
             </SelectTrigger>
             <SelectContent>
