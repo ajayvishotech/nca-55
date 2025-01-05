@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Book, Clock, TestTube2, Target } from "lucide-react";
 import { StreakDisplay } from "@/components/streak/StreakDisplay";
+import { QuizGame } from "@/components/quiz/QuizGame";
 import { StreakProvider } from "@/contexts/StreakContext";
 
 const Index = () => {
@@ -15,6 +16,8 @@ const Index = () => {
         </div>
 
         <StreakDisplay />
+
+        <QuizGame />
 
         <div className="grid gap-4 md:grid-cols-4">
           <Card className="p-6 card-hover">
