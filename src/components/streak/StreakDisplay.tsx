@@ -1,11 +1,14 @@
 import { useStreak } from "@/contexts/StreakContext";
-import { Flame, Trophy, Crown } from "lucide-react";
+import { Flame, Trophy, Crown, Gem, Shield } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
 
 export const StreakDisplay = () => {
-  const { currentStreak, xpPoints, level } = useStreak();
+  const { currentStreak, xpPoints, level, gems, streakFreezes, useStreakFreeze } = useStreak();
+  const { toast } = useToast();
 
   const getStreakIcon = () => {
     if (currentStreak >= 31) {
@@ -32,6 +35,31 @@ export const StreakDisplay = () => {
     return "Start Your Journey Today! 🌟";
   };
 
+  const getStreakTier = () => {
+    if (currentStreak >= 365) return "Diamond";
+    if (currentStreak >= 100) return "Gold";
+    if (currentStreak >= 30) return "Silver";
+    if (currentStreak >= 7) return "Bronze";
+    return "Novice";
+  };
+
+  const handleUseStreakFreeze = () => {
+    if (useStreakFreeze()) {
+      toast({
+        title: "Streak Freeze Activated!",
+        description: "Your streak is protected for today.",
+        duration: 3000,
+      });
+    } else {
+      toast({
+        title: "No Streak Freezes Available",
+        description: "Complete more challenges to earn streak freezes!",
+        variant: "destructive",
+        duration: 3000,
+      });
+    }
+  };
+
   const xpToNextLevel = (level * 100) - xpPoints;
   const progress = ((xpPoints % 100) / 100) * 100;
 
@@ -49,9 +77,15 @@ export const StreakDisplay = () => {
             <p className="text-sm text-muted-foreground">{getMotivationalMessage()}</p>
           </div>
         </div>
-        <Badge variant="secondary" className="text-lg px-4 py-2">
-          Level {level}
-        </Badge>
+        <div className="flex items-center gap-4">
+          <Badge variant="secondary" className="text-lg px-4 py-2">
+            Level {level}
+          </Badge>
+          <div className="flex items-center gap-2">
+            <Gem className="h-5 w-5 text-blue-500" />
+            <span className="font-bold">{gems}</span>
+          </div>
+        </div>
       </div>
 
       <div className="space-y-2">
@@ -60,6 +94,21 @@ export const StreakDisplay = () => {
           <span>{xpToNextLevel} XP to Level {level + 1}</span>
         </div>
         <Progress value={progress} className="h-2" />
+      </div>
+
+      <div className="flex items-center justify-between pt-2">
+        <Badge variant="outline" className="text-sm">
+          {getStreakTier()} Tier
+        </Badge>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleUseStreakFreeze}
+          className="flex items-center gap-2"
+        >
+          <Shield className="h-4 w-4" />
+          Streak Freezes: {streakFreezes}
+        </Button>
       </div>
     </Card>
   );
