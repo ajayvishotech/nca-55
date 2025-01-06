@@ -11,6 +11,8 @@ import CurrentAffairs from "./pages/CurrentAffairs";
 import MockTests from "./pages/MockTests";
 import Doubts from "./pages/Doubts";
 import Dashboard from "./pages/Dashboard";
+import Profile from "./pages/Profile";
+import Login from "./pages/Login";
 
 const queryClient = new QueryClient();
 
@@ -21,16 +23,18 @@ const App = () => (
         <StreakProvider>
           <Toaster />
           <Sonner />
-          <DashboardLayout>
-            <Routes>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route element={<DashboardLayout />}>
               <Route path="/" element={<Index />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/profile" element={<Profile />} />
               <Route path="/materials" element={<Materials />} />
               <Route path="/current-affairs" element={<CurrentAffairs />} />
               <Route path="/mock-tests" element={<MockTests />} />
               <Route path="/doubts" element={<Doubts />} />
-            </Routes>
-          </DashboardLayout>
+            </Route>
+          </Routes>
         </StreakProvider>
       </TooltipProvider>
     </BrowserRouter>

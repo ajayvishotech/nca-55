@@ -1,10 +1,9 @@
-import { Book, Home, TestTube, Newspaper, MessageSquare, LayoutDashboard } from "lucide-react";
+import { Book, Home, TestTube, Newspaper, MessageSquare } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 const navigation = [
   { name: "Milestone", href: "/", icon: Home },
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Study Materials", href: "/materials", icon: Book },
   { name: "Current Affairs", href: "/current-affairs", icon: Newspaper },
   { name: "Mock Tests", href: "/mock-tests", icon: TestTube },
