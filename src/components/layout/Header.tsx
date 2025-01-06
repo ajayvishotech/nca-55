@@ -1,4 +1,4 @@
-import { Bell, LogOut, Menu, User } from "lucide-react";
+import { Bell, LogOut, Menu, User, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -13,12 +13,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useNavigate } from "react-router-dom";
 
 interface HeaderProps {
   onMenuClick: () => void;
 }
 
 export const Header = ({ onMenuClick }: HeaderProps) => {
+  const navigate = useNavigate();
+
   return (
     <header className="border-b bg-white">
       <div className="flex h-16 items-center px-4 md:px-6">
@@ -68,6 +71,13 @@ export const Header = ({ onMenuClick }: HeaderProps) => {
               <DropdownMenuItem className="hover:bg-primary/10 cursor-pointer transition-colors duration-200">
                 <User className="mr-2 h-4 w-4" />
                 Profile
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                className="hover:bg-primary/10 cursor-pointer transition-colors duration-200"
+                onClick={() => navigate('/dashboard')}
+              >
+                <LayoutDashboard className="mr-2 h-4 w-4" />
+                Dashboard
               </DropdownMenuItem>
               <DropdownMenuItem className="hover:bg-destructive/10 cursor-pointer transition-colors duration-200">
                 <LogOut className="mr-2 h-4 w-4" />
