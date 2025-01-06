@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Sparkles, Clock, SplitSquareHorizontal, Zap } from "lucide-react";
+import { SplitSquareHorizontal, Clock, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PowerUp } from "./types";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -10,7 +10,7 @@ interface PowerUpBarProps {
     timeBoost: number;
     doublePoints: number;
   };
-  onUsePowerUp: (type: keyof typeof powerUps) => void;
+  onUsePowerUp: (type: "fiftyFifty" | "timeBoost" | "doublePoints") => void;
   disabled: boolean;
 }
 
@@ -46,7 +46,7 @@ export const PowerUpBar = ({ powerUps, onUsePowerUp, disabled }: PowerUpBarProps
                 variant="outline"
                 size="sm"
                 disabled={powerUp.count === 0 || disabled}
-                onClick={() => onUsePowerUp(powerUp.name as keyof typeof powerUps)}
+                onClick={() => onUsePowerUp(powerUp.name as "fiftyFifty" | "timeBoost" | "doublePoints")}
                 className={cn(
                   "gap-1 transition-all hover:scale-105",
                   powerUp.count > 0 && "animate-pulse"
