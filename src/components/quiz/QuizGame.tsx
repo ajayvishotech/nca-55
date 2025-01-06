@@ -2,29 +2,14 @@ import { useState, useEffect } from "react";
 import { useStreak } from "@/contexts/StreakContext";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Card } from "@/components/ui/card";
-import {
-  Trophy,
-  Zap,
-  Brain,
-  Timer,
-  Crown,
-  Sparkles,
-  Gem,
-  Sword,
-  Shield,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Trophy, Brain, Timer, Crown, Sparkles, Gem, Sword, Shield } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-
-interface Question {
-  id: number;
-  question: string;
-  options: string[];
-  correctAnswer: number;
-  category: string;
-}
+import { PowerUpBar } from "./PowerUpBar";
+import { QuestionDisplay } from "./QuestionDisplay";
+import { Question } from "./types";
+import { motion, AnimatePresence } from "framer-motion";
 
 const SAMPLE_QUESTIONS: Question[] = [
   {
@@ -66,6 +51,7 @@ export const QuizGame = () => {
   });
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [streak, setStreak] = useState(0);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const { addXP, addGems } = useStreak();
   const { toast } = useToast();
 
@@ -88,6 +74,7 @@ export const QuizGame = () => {
     setCurrentQuestion(0);
     setStreak(0);
     setSelectedAnswer(null);
+    setIsCorrect(null);
   };
 
   const handleAnswer = (answerIndex: number) => {
@@ -95,6 +82,8 @@ export const QuizGame = () => {
     setSelectedAnswer(answerIndex);
 
     const correct = answerIndex === SAMPLE_QUESTIONS[currentQuestion].correctAnswer;
+    setIsCorrect(correct);
+
     if (correct) {
       const points = streak >= 2 ? 20 : 10;
       setScore((prev) => prev + points);
@@ -120,6 +109,7 @@ export const QuizGame = () => {
       if (currentQuestion < SAMPLE_QUESTIONS.length - 1) {
         setCurrentQuestion((prev) => prev + 1);
         setSelectedAnswer(null);
+        setIsCorrect(null);
         setTimeLeft(30);
       } else {
         handleGameOver();
@@ -130,7 +120,7 @@ export const QuizGame = () => {
   const handleGameOver = () => {
     setGameState("finished");
     toast({
-      title: "Quiz Complete! 🎉",
+      title: "Quest Complete! 🎉",
       description: `Final Score: ${score} | XP Earned: ${score}`,
     });
   };
@@ -164,9 +154,13 @@ export const QuizGame = () => {
 
   return (
     <Card className="p-6 space-y-4 bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-950 dark:to-blue-950">
-      <div className="flex items-center justify-between">
+      <motion.div 
+        className="flex items-center justify-between"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
         <div className="flex items-center gap-2">
-          <Brain className="h-6 w-6 text-purple-500" />
+          <Brain className="h-6 w-6 text-purple-500 animate-pulse" />
           <h2 className="text-xl font-bold font-heading">Knowledge Kingdom</h2>
         </div>
         <div className="flex items-center gap-2">
@@ -179,86 +173,75 @@ export const QuizGame = () => {
             {timeLeft}s
           </Badge>
         </div>
-      </div>
+      </motion.div>
 
-      {gameState === "ready" && (
-        <div className="text-center space-y-4 py-8">
-          <Crown className="h-12 w-12 mx-auto text-yellow-500 animate-bounce" />
-          <h3 className="text-2xl font-bold">Ready to Challenge?</h3>
-          <p className="text-muted-foreground">Test your knowledge of current affairs!</p>
-          <Button onClick={startGame} className="gap-2">
-            <Sword className="h-4 w-4" />
-            Start Quest
-          </Button>
-        </div>
-      )}
+      <AnimatePresence mode="wait">
+        {gameState === "ready" && (
+          <motion.div 
+            className="text-center space-y-4 py-8"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+          >
+            <Crown className="h-12 w-12 mx-auto text-yellow-500 animate-bounce" />
+            <h3 className="text-2xl font-bold">Ready to Challenge?</h3>
+            <p className="text-muted-foreground">Test your knowledge of current affairs!</p>
+            <Button onClick={startGame} className="gap-2 animate-pulse">
+              <Sword className="h-4 w-4" />
+              Start Quest
+            </Button>
+          </motion.div>
+        )}
 
-      {gameState === "playing" && (
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <div className="space-y-1">
-              <p className="text-sm text-muted-foreground">
-                Question {currentQuestion + 1}/{SAMPLE_QUESTIONS.length}
-              </p>
-              <Progress value={(currentQuestion / SAMPLE_QUESTIONS.length) * 100} className="w-32" />
+        {gameState === "playing" && (
+          <motion.div 
+            className="space-y-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <div className="flex justify-between items-center">
+              <div className="space-y-1">
+                <p className="text-sm text-muted-foreground">
+                  Question {currentQuestion + 1}/{SAMPLE_QUESTIONS.length}
+                </p>
+                <Progress value={(currentQuestion / SAMPLE_QUESTIONS.length) * 100} className="w-32" />
+              </div>
+              <PowerUpBar 
+                powerUps={powerUps}
+                onUsePowerUp={usePowerUp}
+                disabled={selectedAnswer !== null}
+              />
             </div>
-            <div className="flex gap-2">
-              {Object.entries(powerUps).map(([type, count]) => (
-                <Button
-                  key={type}
-                  variant="outline"
-                  size="sm"
-                  disabled={count === 0 || selectedAnswer !== null}
-                  onClick={() => usePowerUp(type as keyof typeof powerUps)}
-                  className="gap-1"
-                >
-                  <Sparkles className="h-4 w-4 text-yellow-500" />
-                  {count}
-                </Button>
-              ))}
-            </div>
-          </div>
 
-          <div className="space-y-4">
-            <p className="text-lg font-medium">{SAMPLE_QUESTIONS[currentQuestion].question}</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {SAMPLE_QUESTIONS[currentQuestion].options.map((option, index) => (
-                <Button
-                  key={index}
-                  variant="outline"
-                  disabled={selectedAnswer !== null}
-                  onClick={() => handleAnswer(index)}
-                  className={cn(
-                    "h-auto py-4 px-6 text-left justify-start",
-                    selectedAnswer === index &&
-                      index === SAMPLE_QUESTIONS[currentQuestion].correctAnswer &&
-                      "bg-green-500 text-white hover:bg-green-600",
-                    selectedAnswer === index &&
-                      index !== SAMPLE_QUESTIONS[currentQuestion].correctAnswer &&
-                      "bg-red-500 text-white hover:bg-red-600"
-                  )}
-                >
-                  {option}
-                </Button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+            <QuestionDisplay
+              question={SAMPLE_QUESTIONS[currentQuestion]}
+              selectedAnswer={selectedAnswer}
+              onAnswer={handleAnswer}
+              isCorrect={isCorrect}
+            />
+          </motion.div>
+        )}
 
-      {gameState === "finished" && (
-        <div className="text-center space-y-4 py-8">
-          <Gem className="h-12 w-12 mx-auto text-blue-500 animate-pulse" />
-          <h3 className="text-2xl font-bold">Quest Complete!</h3>
-          <p className="text-muted-foreground">
-            Final Score: {score} | Streak: {streak}
-          </p>
-          <Button onClick={startGame} className="gap-2">
-            <Shield className="h-4 w-4" />
-            Play Again
-          </Button>
-        </div>
-      )}
+        {gameState === "finished" && (
+          <motion.div 
+            className="text-center space-y-4 py-8"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+          >
+            <Gem className="h-12 w-12 mx-auto text-blue-500 animate-pulse" />
+            <h3 className="text-2xl font-bold">Quest Complete!</h3>
+            <p className="text-muted-foreground">
+              Final Score: {score} | Streak: {streak}
+            </p>
+            <Button onClick={startGame} className="gap-2">
+              <Shield className="h-4 w-4" />
+              Play Again
+            </Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </Card>
   );
 };
