@@ -32,7 +32,7 @@ const SubjectItem = ({ subject }: SubjectItemProps) => {
   const [selectedChapter, setSelectedChapter] = useState<string | null>(null);
 
   const handleChapterClick = (chapterName: string) => {
-    setSelectedChapter(chapterName);
+    setSelectedChapter(chapterName === selectedChapter ? null : chapterName);
   };
 
   return (
@@ -53,43 +53,48 @@ const SubjectItem = ({ subject }: SubjectItemProps) => {
       <AccordionContent>
         <div className="mt-4 space-y-3 px-6 pb-4">
           {subject.items.map((item) => (
-            <div
-              key={item.name}
-              onClick={() => handleChapterClick(item.name)}
-              className="group relative flex items-center justify-between p-4 rounded-lg border bg-card transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 cursor-pointer"
-            >
-              <div className="flex items-center gap-4">
-                <div className="text-3xl">{getSubjectIcon(item.name)}</div>
-                <div className="flex flex-col">
-                  <h4 className="font-medium text-base group-hover:text-primary transition-colors">
-                    {item.name}
-                  </h4>
-                  <div className="flex items-center gap-4 mt-1">
-                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                      <BookOpen className="h-4 w-4" />
-                      <span>{item.chapters} chapters</span>
-                    </div>
-                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                      <Clock className="h-4 w-4" />
-                      <span>~{item.chapters * 2}h</span>
-                    </div>
-                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                      <Users className="h-4 w-4" />
-                      <span>{Math.floor(Math.random() * 1000) + 500} enrolled</span>
+            <div key={item.name} className="space-y-3">
+              <div
+                onClick={() => handleChapterClick(item.name)}
+                className="group relative flex items-center justify-between p-4 rounded-lg border bg-card transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 cursor-pointer"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="text-3xl">{getSubjectIcon(item.name)}</div>
+                  <div className="flex flex-col">
+                    <h4 className="font-medium text-base group-hover:text-primary transition-colors">
+                      {item.name}
+                    </h4>
+                    <div className="flex items-center gap-4 mt-1">
+                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                        <BookOpen className="h-4 w-4" />
+                        <span>{item.chapters} chapters</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                        <Clock className="h-4 w-4" />
+                        <span>~{item.chapters * 2}h</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                        <Users className="h-4 w-4" />
+                        <span>{Math.floor(Math.random() * 1000) + 500} enrolled</span>
+                      </div>
                     </div>
                   </div>
                 </div>
+                <div className="flex items-center gap-3">
+                  <Badge variant="secondary" className="hidden md:inline-flex">
+                    {item.chapters > 10 ? "Comprehensive" : "Quick Learn"}
+                  </Badge>
+                  <ChevronRight className={`h-5 w-5 text-muted-foreground transition-transform duration-200 ${selectedChapter === item.name ? 'rotate-90' : ''}`} />
+                </div>
               </div>
-              <div className="flex items-center gap-3">
-                <Badge variant="secondary" className="hidden md:inline-flex">
-                  {item.chapters > 10 ? "Comprehensive" : "Quick Learn"}
-                </Badge>
-                <ChevronRight className="h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-              </div>
+              {selectedChapter === item.name && (
+                <div className="rounded-lg border bg-card/50 overflow-hidden">
+                  <ChapterPreview chapter={item.name} />
+                </div>
+              )}
             </div>
           ))}
         </div>
-        {selectedChapter && <ChapterPreview chapter={selectedChapter} />}
       </AccordionContent>
     </AccordionItem>
   );

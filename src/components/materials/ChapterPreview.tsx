@@ -6,7 +6,6 @@ interface ChapterPreviewProps {
 }
 
 const ChapterPreview = ({ chapter }: ChapterPreviewProps) => {
-  // Define chapters based on the selected subject
   const getChapters = () => {
     switch (chapter) {
       case "Economics - NCERT Summary":
@@ -26,7 +25,6 @@ const ChapterPreview = ({ chapter }: ChapterPreviewProps) => {
           "Industries",
           "Transport and Communication"
         ];
-      // Add more cases for other subjects
       default:
         return [];
     }
@@ -65,16 +63,16 @@ const ChapterPreview = ({ chapter }: ChapterPreviewProps) => {
 
           {/* Notes and Practice section */}
           <div className="grid md:grid-cols-2 gap-4">
-            <div className="p-4 rounded-lg border bg-gray-50">
+            <div className="p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors">
               <div className="flex items-center gap-3">
                 <FileText className="text-orange-500" />
                 <div>
                   <h3 className="font-medium">Notes</h3>
-                  <p className="text-sm text-gray-500">Available on android app</p>
+                  <p className="text-sm text-muted-foreground">Available on android app</p>
                 </div>
               </div>
             </div>
-            <div className="p-4 rounded-lg border bg-gray-50">
+            <div className="p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <Zap className="text-primary" />
@@ -90,14 +88,14 @@ const ChapterPreview = ({ chapter }: ChapterPreviewProps) => {
             <h3 className="font-medium">Video Lessons</h3>
             <div className="space-y-3">
               {[1, 2, 3].map((_, index) => (
-                <div key={index} className="p-4 rounded-lg border bg-gray-50">
+                <div key={index} className="p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors">
                   <div className="flex items-center gap-3">
                     <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center">
                       <ChevronRight className="text-white" />
                     </div>
                     <div>
                       <h4 className="font-medium">Lesson {index + 1}</h4>
-                      <p className="text-sm text-gray-500">26 mins</p>
+                      <p className="text-sm text-muted-foreground">26 mins</p>
                     </div>
                   </div>
                 </div>
