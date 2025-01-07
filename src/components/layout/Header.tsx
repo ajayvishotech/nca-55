@@ -1,4 +1,4 @@
-import { Bell, LogOut, Menu, User, LayoutDashboard } from "lucide-react";
+import { Bell, LogOut, Menu, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -21,6 +22,16 @@ interface HeaderProps {
 
 export const Header = ({ onMenuClick }: HeaderProps) => {
   const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleLogout = () => {
+    // Add your logout logic here
+    toast({
+      title: "Logged out successfully",
+      description: "See you next time!",
+    });
+    navigate("/login");
+  };
 
   return (
     <header className="border-b bg-white">
@@ -68,18 +79,17 @@ export const Header = ({ onMenuClick }: HeaderProps) => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="animate-fadeIn">
-              <DropdownMenuItem className="hover:bg-primary/10 cursor-pointer transition-colors duration-200">
+              <DropdownMenuItem 
+                className="hover:bg-primary/10 cursor-pointer transition-colors duration-200"
+                onClick={() => navigate('/profile')}
+              >
                 <User className="mr-2 h-4 w-4" />
                 Profile
               </DropdownMenuItem>
               <DropdownMenuItem 
-                className="hover:bg-primary/10 cursor-pointer transition-colors duration-200"
-                onClick={() => navigate('/dashboard')}
+                className="hover:bg-destructive/10 cursor-pointer transition-colors duration-200 text-destructive"
+                onClick={handleLogout}
               >
-                <LayoutDashboard className="mr-2 h-4 w-4" />
-                Dashboard
-              </DropdownMenuItem>
-              <DropdownMenuItem className="hover:bg-destructive/10 cursor-pointer transition-colors duration-200">
                 <LogOut className="mr-2 h-4 w-4" />
                 Logout
               </DropdownMenuItem>
