@@ -25,7 +25,6 @@ export const Header = ({ onMenuClick }: HeaderProps) => {
   const { toast } = useToast();
 
   const handleLogout = () => {
-    // Add your logout logic here
     toast({
       title: "Logged out successfully",
       description: "See you next time!",
@@ -78,16 +77,16 @@ export const Header = ({ onMenuClick }: HeaderProps) => {
                 <User className="h-5 w-5" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="animate-fadeIn">
+            <DropdownMenuContent align="end" className="w-56 animate-fadeIn">
               <DropdownMenuItem 
-                className="hover:bg-primary/10 cursor-pointer transition-colors duration-200"
+                className="hover:bg-primary/10 cursor-pointer transition-colors duration-200 p-3"
                 onClick={() => navigate('/profile')}
               >
                 <User className="mr-2 h-4 w-4" />
                 Profile
               </DropdownMenuItem>
               <DropdownMenuItem 
-                className="hover:bg-destructive/10 cursor-pointer transition-colors duration-200 text-destructive"
+                className="hover:bg-destructive/10 cursor-pointer transition-colors duration-200 text-destructive p-3"
                 onClick={handleLogout}
               >
                 <LogOut className="mr-2 h-4 w-4" />
