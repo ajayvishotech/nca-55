@@ -1,7 +1,18 @@
 import { Card } from "@/components/ui/card";
-import { Newspaper } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Newspaper, Download, Clock } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const CurrentAffairs = () => {
+  const { toast } = useToast();
+
+  const handleDownload = () => {
+    toast({
+      title: "Download Started",
+      description: "Today's newspaper is being downloaded.",
+    });
+  };
+
   return (
     <div className="space-y-6 animate-fadeIn">
       <div className="flex flex-col gap-4">
@@ -9,17 +20,33 @@ const CurrentAffairs = () => {
         <p className="text-muted-foreground">Stay updated with the latest news</p>
       </div>
 
+      <Button 
+        onClick={handleDownload}
+        className="w-full md:w-auto mb-4 bg-accent hover:bg-accent/90"
+      >
+        <Newspaper className="h-5 w-5 mr-2" />
+        Today's Newspaper
+      </Button>
+
       <div className="grid gap-4">
         {[1, 2, 3].map((i) => (
-          <Card key={i} className="p-6 cursor-pointer card-hover">
-            <div className="flex items-center gap-4">
-              <div className="rounded-full bg-primary/10 p-3">
-                <Newspaper className="h-6 w-6 text-primary" />
+          <Card key={i} className="p-6 cursor-pointer hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="rounded-full bg-primary/10 p-3">
+                  <Newspaper className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <p className="font-medium">Daily Update {i}</p>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Clock className="h-4 w-4" />
+                    <span>2 hours ago</span>
+                  </div>
+                </div>
               </div>
-              <div>
-                <p className="font-medium">Daily Update {i}</p>
-                <p className="text-sm text-muted-foreground">2 hours ago</p>
-              </div>
+              <Button variant="ghost" size="sm">
+                <Download className="h-4 w-4" />
+              </Button>
             </div>
           </Card>
         ))}

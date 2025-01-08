@@ -1,10 +1,15 @@
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Edit2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Edit2, Save, X } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const Profile = () => {
-  const studentData = {
+  const { toast } = useToast();
+  const [isEditing, setIsEditing] = useState(false);
+  const [studentData, setStudentData] = useState({
     name: "John Doe",
     email: "john.doe@example.com",
     phone: "+91 9876543210",
@@ -13,16 +18,45 @@ const Profile = () => {
     education: "B.Tech Computer Science",
     employment: "Software Engineer at Tech Corp",
     avatar: "/placeholder.svg"
+  });
+
+  const [editedData, setEditedData] = useState(studentData);
+
+  const handleSave = () => {
+    setStudentData(editedData);
+    setIsEditing(false);
+    toast({
+      title: "Profile Updated",
+      description: "Your profile has been successfully updated.",
+    });
+  };
+
+  const handleCancel = () => {
+    setEditedData(studentData);
+    setIsEditing(false);
   };
 
   return (
     <div className="space-y-6 p-4 md:p-6 max-w-4xl mx-auto animate-fadeIn">
       <div className="flex items-center justify-between">
         <h1 className="font-heading text-2xl font-bold">Profile</h1>
-        <Button variant="outline" size="sm" className="gap-2">
-          <Edit2 className="h-4 w-4" />
-          Edit Profile
-        </Button>
+        {isEditing ? (
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={handleCancel}>
+              <X className="h-4 w-4 mr-1" />
+              Cancel
+            </Button>
+            <Button size="sm" onClick={handleSave}>
+              <Save className="h-4 w-4 mr-1" />
+              Save
+            </Button>
+          </div>
+        ) : (
+          <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>
+            <Edit2 className="h-4 w-4 mr-1" />
+            Edit Profile
+          </Button>
+        )}
       </div>
 
       <Card className="p-6">
@@ -36,34 +70,30 @@ const Profile = () => {
 
           <div className="flex-1 space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
-              <div>
-                <h3 className="text-sm font-medium text-muted-foreground">Full Name</h3>
-                <p className="text-base">{studentData.name}</p>
-              </div>
-              <div>
-                <h3 className="text-sm font-medium text-muted-foreground">Email</h3>
-                <p className="text-base">{studentData.email}</p>
-              </div>
-              <div>
-                <h3 className="text-sm font-medium text-muted-foreground">Phone Number</h3>
-                <p className="text-base">{studentData.phone}</p>
-              </div>
-              <div>
-                <h3 className="text-sm font-medium text-muted-foreground">Enrolled Course</h3>
-                <p className="text-base">{studentData.enrolledCourse}</p>
-              </div>
-              <div className="md:col-span-2">
-                <h3 className="text-sm font-medium text-muted-foreground">Address</h3>
-                <p className="text-base">{studentData.address}</p>
-              </div>
-              <div>
-                <h3 className="text-sm font-medium text-muted-foreground">Current Education</h3>
-                <p className="text-base">{studentData.education}</p>
-              </div>
-              <div>
-                <h3 className="text-sm font-medium text-muted-foreground">Employment</h3>
-                <p className="text-base">{studentData.employment}</p>
-              </div>
+              {Object.entries(editedData).map(([key, value]) => {
+                if (key === 'avatar') return null;
+                return (
+                  <div key={key}>
+                    <h3 className="text-sm font-medium text-muted-foreground capitalize">
+                      {key.replace(/([A-Z])/g, ' $1').trim()}
+                    </h3>
+                    {isEditing ? (
+                      <Input
+                        value={value}
+                        onChange={(e) =>
+                          setEditedData((prev) => ({
+                            ...prev,
+                            [key]: e.target.value,
+                          }))
+                        }
+                        className="mt-1"
+                      />
+                    ) : (
+                      <p className="text-base">{value}</p>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
