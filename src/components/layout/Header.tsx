@@ -1,4 +1,4 @@
-import { LogOut, User } from "lucide-react";
+import { LogOut, User, Clock, Book, TestTube, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -16,11 +16,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 
-interface HeaderProps {
-  onMenuClick?: () => void;
-}
-
-export const Header = ({ onMenuClick }: HeaderProps) => {
+export const Header = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -66,24 +62,39 @@ export const Header = ({ onMenuClick }: HeaderProps) => {
                 className="hover:bg-primary/10 cursor-pointer transition-colors duration-200 p-2 text-sm"
                 onClick={() => navigate('/dashboard')}
               >
-                <span className="font-medium">Dashboard</span>
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 animate-spin" />
+                  <span className="font-medium">Dashboard</span>
+                </div>
               </DropdownMenuItem>
               <DropdownMenuItem className="p-2 text-sm">
                 <div className="space-y-2 w-full">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Study Hours</span>
+                  <div className="flex justify-between items-center">
+                    <span className="text-muted-foreground flex items-center gap-2">
+                      <Clock className="h-4 w-4 animate-pulse" />
+                      Study Hours
+                    </span>
                     <span className="font-medium">24h</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Materials Completed</span>
+                  <div className="flex justify-between items-center">
+                    <span className="text-muted-foreground flex items-center gap-2">
+                      <Book className="h-4 w-4 animate-bounce" />
+                      Materials Completed
+                    </span>
                     <span className="font-medium">12</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Mock Tests</span>
+                  <div className="flex justify-between items-center">
+                    <span className="text-muted-foreground flex items-center gap-2">
+                      <TestTube className="h-4 w-4 animate-pulse" />
+                      Mock Tests
+                    </span>
                     <span className="font-medium">8</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Overall Progress</span>
+                  <div className="flex justify-between items-center">
+                    <span className="text-muted-foreground flex items-center gap-2">
+                      <Target className="h-4 w-4 animate-wiggle" />
+                      Overall Progress
+                    </span>
                     <span className="font-medium">65%</span>
                   </div>
                 </div>
