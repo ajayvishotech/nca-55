@@ -44,6 +44,7 @@ const MockTests = () => {
     },
   ];
 
+  // Animation variants
   const container = {
     hidden: { opacity: 0 },
     show: {
@@ -59,6 +60,7 @@ const MockTests = () => {
     show: { opacity: 1, y: 0 }
   };
 
+  // Instruction items separated from animation variants
   const instructionItems = [
     { id: 1, icon: <Timer className="h-4 w-4" />, text: "Time-bound tests to simulate exam conditions" },
     { id: 2, icon: <Target className="h-4 w-4" />, text: "Multiple choice questions with instant feedback" },
