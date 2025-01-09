@@ -9,12 +9,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Clock, LogOut, User, Home, BookOpen, TestTube2, Target } from "lucide-react";
+import { Clock, LogOut, User, Home, BookOpen, TestTube2, Target, GraduationCap, Building2, Landmark, BookOpenCheck } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState("UPSC-CSE");
   const isMobile = useIsMobile();
+
+  const courses = [
+    { id: 1, name: "UPSC-CSE", icon: GraduationCap },
+    { id: 2, name: "TNPSC", icon: Building2 },
+    { id: 3, name: "Banking", icon: Landmark },
+    { id: 4, name: "Teaching", icon: BookOpenCheck },
+  ];
 
   const menuItems = [
     { icon: Home, label: "Dashboard", value: "24h", href: "/dashboard" },
@@ -83,6 +91,34 @@ export const Header = () => {
             Nanjil Career Academy
           </span>
         </Link>
+
+        <div className="ml-4 flex-1">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button 
+                variant="outline" 
+                className="gap-2 bg-accent/5 hover:bg-accent/10"
+              >
+                {courses.find(c => c.name === selectedCourse)?.icon && 
+                  <courses.find(c => c.name === selectedCourse)!.icon className="h-4 w-4" />
+                }
+                {selectedCourse}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-[200px]">
+              {courses.map((course) => (
+                <DropdownMenuItem 
+                  key={course.id}
+                  className="gap-2 cursor-pointer"
+                  onClick={() => setSelectedCourse(course.name)}
+                >
+                  <course.icon className="h-4 w-4" />
+                  {course.name}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
 
         <div className="flex flex-1 items-center justify-end space-x-4">
           {isMobile ? (
