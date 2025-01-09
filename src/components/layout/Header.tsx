@@ -83,6 +83,9 @@ export const Header = () => {
     </Sheet>
   );
 
+  const selectedCourseData = courses.find(c => c.name === selectedCourse);
+  const IconComponent = selectedCourseData?.icon;
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center">
@@ -99,9 +102,7 @@ export const Header = () => {
                 variant="outline" 
                 className="gap-2 bg-accent/5 hover:bg-accent/10"
               >
-                {courses.find(c => c.name === selectedCourse)?.icon && 
-                  <courses.find(c => c.name === selectedCourse)!.icon className="h-4 w-4" />
-                }
+                {IconComponent && <IconComponent className="h-4 w-4" />}
                 {selectedCourse}
               </Button>
             </DropdownMenuTrigger>
