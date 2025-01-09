@@ -44,8 +44,8 @@ const MockTests = () => {
     },
   ];
 
-  // Animation variants
-  const container = {
+  // Animation variants for container and items
+  const containerVariants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
@@ -55,12 +55,12 @@ const MockTests = () => {
     }
   };
 
-  const item = {
+  const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0 }
   };
 
-  // Instruction items separated from animation variants
+  // Instruction items data
   const instructionItems = [
     { id: 1, icon: <Timer className="h-4 w-4" />, text: "Time-bound tests to simulate exam conditions" },
     { id: 2, icon: <Target className="h-4 w-4" />, text: "Multiple choice questions with instant feedback" },
@@ -92,15 +92,15 @@ const MockTests = () => {
         <AlertDescription className="mt-2">
           <motion.ul 
             className="list-none space-y-2"
+            variants={containerVariants}
             initial="hidden"
             animate="show"
-            variants={container}
           >
             {instructionItems.map((item) => (
               <motion.li 
                 key={item.id}
                 className="flex items-center gap-2 text-accent-foreground"
-                variants={item}
+                variants={itemVariants}
               >
                 {item.icon}
                 {item.text}
@@ -112,12 +112,12 @@ const MockTests = () => {
 
       <motion.div 
         className="grid gap-4 md:grid-cols-2"
-        variants={container}
+        variants={containerVariants}
         initial="hidden"
         animate="show"
       >
         {tests.map((test) => (
-          <motion.div key={test.id} variants={item}>
+          <motion.div key={test.id} variants={itemVariants}>
             <Card className="group overflow-hidden">
               <motion.div 
                 className="p-6 bg-gradient-to-br from-background to-accent/5 hover:to-accent/10 transition-all duration-300"
