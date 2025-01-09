@@ -59,6 +59,13 @@ const MockTests = () => {
     show: { opacity: 1, y: 0 }
   };
 
+  const instructionItems = [
+    { id: 1, icon: <Timer className="h-4 w-4" />, text: "Time-bound tests to simulate exam conditions" },
+    { id: 2, icon: <Target className="h-4 w-4" />, text: "Multiple choice questions with instant feedback" },
+    { id: 3, icon: <Trophy className="h-4 w-4" />, text: "Earn points and track your progress" },
+    { id: 4, icon: <Sparkles className="h-4 w-4" />, text: "Detailed performance analysis after completion" },
+  ];
+
   return (
     <div className="space-y-6 animate-fadeIn">
       <motion.div 
@@ -87,18 +94,13 @@ const MockTests = () => {
             animate="show"
             variants={container}
           >
-            {[
-              { icon: Timer, text: "Time-bound tests to simulate exam conditions" },
-              { icon: Target, text: "Multiple choice questions with instant feedback" },
-              { icon: Trophy, text: "Earn points and track your progress" },
-              { icon: Sparkles, text: "Detailed performance analysis after completion" },
-            ].map((item, index) => (
+            {instructionItems.map((item) => (
               <motion.li 
-                key={index}
+                key={item.id}
                 className="flex items-center gap-2 text-accent-foreground"
                 variants={item}
               >
-                <item.icon className="h-4 w-4" />
+                {item.icon}
                 {item.text}
               </motion.li>
             ))}
