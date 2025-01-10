@@ -22,7 +22,9 @@ import {
   Building2, 
   Landmark, 
   BookOpenCheck,
-  UserCircle
+  UserCircle,
+  School,
+  Clock3
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -32,10 +34,46 @@ export const Header = () => {
   const isMobile = useIsMobile();
 
   const courses = [
-    { id: 1, name: "UPSC-CSE", icon: GraduationCap },
-    { id: 2, name: "TNPSC", icon: Building2 },
-    { id: 3, name: "Banking", icon: Landmark },
-    { id: 4, name: "Teaching", icon: BookOpenCheck },
+    { 
+      id: 1, 
+      name: "Competitive Exams",
+      icon: GraduationCap,
+      subcategories: [
+        { id: 'upsc', name: 'UPSC-CSE', modes: ['Full Time', 'Part Time'] },
+        { id: 'ssc', name: 'SSC', modes: ['Full Time', 'Part Time'] },
+        { id: 'rrb', name: 'RRB', modes: ['Full Time', 'Part Time'] },
+        { id: 'tnpsc', name: 'TNPSC', modes: ['Full Time', 'Part Time'] },
+      ]
+    },
+    { 
+      id: 2, 
+      name: "Banking",
+      icon: Landmark,
+      subcategories: [
+        { id: 'ibps', name: 'IBPS', modes: ['Full Time', 'Part Time'] },
+        { id: 'sbi', name: 'SBI', modes: ['Full Time', 'Part Time'] },
+        { id: 'rbi', name: 'RBI', modes: ['Full Time', 'Part Time'] },
+      ]
+    },
+    { 
+      id: 3, 
+      name: "School",
+      icon: School,
+      subcategories: [
+        { id: 'neet', name: 'NEET', modes: ['Full Time', 'Part Time'] },
+        { id: 'jee', name: 'JEE Main & Advanced', modes: ['Full Time', 'Part Time'] },
+        { id: 'kvpy', name: 'KVPY', modes: ['Full Time', 'Part Time'] },
+      ]
+    },
+    { 
+      id: 4, 
+      name: "Teaching",
+      icon: BookOpenCheck,
+      subcategories: [
+        { id: 'tet', name: 'TET', modes: ['Full Time', 'Part Time'] },
+        { id: 'net', name: 'NET/SET', modes: ['Full Time', 'Part Time'] },
+      ]
+    },
   ];
 
   const menuItems = [
@@ -120,16 +158,37 @@ export const Header = () => {
                 {selectedCourse}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-[200px]">
-              {courses.map((course) => (
-                <DropdownMenuItem 
-                  key={course.id}
-                  className="gap-2 cursor-pointer"
-                  onClick={() => setSelectedCourse(course.name)}
-                >
-                  <course.icon className="h-4 w-4" />
-                  {course.name}
-                </DropdownMenuItem>
+            <DropdownMenuContent align="start" className="w-[280px]">
+              {courses.map((category) => (
+                <div key={category.id}>
+                  <DropdownMenuItem className="gap-2 font-semibold">
+                    <category.icon className="h-4 w-4" />
+                    {category.name}
+                  </DropdownMenuItem>
+                  {category.subcategories.map((course) => (
+                    <DropdownMenuItem 
+                      key={course.id}
+                      className="pl-8 gap-2 cursor-pointer"
+                      onClick={() => setSelectedCourse(course.name)}
+                    >
+                      {course.name}
+                      <DropdownMenu>
+                        <DropdownMenuTrigger className="ml-auto">
+                          <Clock3 className="h-3 w-3 text-muted-foreground" />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          {course.modes.map((mode) => (
+                            <DropdownMenuItem key={mode}>
+                              <Clock className="h-3 w-3 mr-2" />
+                              {mode}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </DropdownMenuItem>
+                  ))}
+                  <DropdownMenuSeparator />
+                </div>
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
