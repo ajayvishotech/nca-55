@@ -22,8 +22,7 @@ import {
   Building2, 
   Landmark, 
   BookOpenCheck,
-  UserCircle,
-  GraduationCap2
+  UserCircle
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -167,7 +166,7 @@ export const Header = () => {
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/enroll" className="flex items-center gap-2">
-                    <GraduationCap2 className="w-4 h-4" />
+                    <GraduationCap className="w-4 h-4" />
                     <span>Enroll in Courses</span>
                   </Link>
                 </DropdownMenuItem>
