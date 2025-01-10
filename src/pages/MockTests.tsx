@@ -44,7 +44,6 @@ const MockTests = () => {
     },
   ];
 
-  // Animation variants for container and items
   const containerVariants = {
     hidden: { opacity: 0 },
     show: {
@@ -60,12 +59,27 @@ const MockTests = () => {
     show: { opacity: 1, y: 0 }
   };
 
-  // Instruction items data
   const instructionItems = [
-    { id: 1, icon: <Timer className="h-4 w-4" />, text: "Time-bound tests to simulate exam conditions" },
-    { id: 2, icon: <Target className="h-4 w-4" />, text: "Multiple choice questions with instant feedback" },
-    { id: 3, icon: <Trophy className="h-4 w-4" />, text: "Earn points and track your progress" },
-    { id: 4, icon: <Sparkles className="h-4 w-4" />, text: "Detailed performance analysis after completion" },
+    { 
+      id: 1, 
+      icon: <Timer className="h-5 w-5 text-blue-500" />, 
+      text: "Time-bound tests to simulate exam conditions",
+    },
+    { 
+      id: 2, 
+      icon: <Target className="h-5 w-5 text-purple-500" />, 
+      text: "Multiple choice questions with instant feedback",
+    },
+    { 
+      id: 3, 
+      icon: <Trophy className="h-5 w-5 text-yellow-500" />, 
+      text: "Earn points and track your progress",
+    },
+    { 
+      id: 4, 
+      icon: <Sparkles className="h-5 w-5 text-emerald-500" />, 
+      text: "Detailed performance analysis after completion",
+    },
   ];
 
   return (
@@ -91,7 +105,7 @@ const MockTests = () => {
         <AlertTitle className="text-accent font-heading">Test Instructions</AlertTitle>
         <AlertDescription className="mt-2">
           <motion.ul 
-            className="list-none space-y-2"
+            className="list-none space-y-3"
             variants={containerVariants}
             initial="hidden"
             animate="show"
@@ -99,11 +113,11 @@ const MockTests = () => {
             {instructionItems.map((item) => (
               <motion.li 
                 key={item.id}
-                className="flex items-center gap-2 text-accent-foreground"
+                className="flex items-center gap-3 text-gray-800 dark:text-gray-200"
                 variants={itemVariants}
               >
                 {item.icon}
-                {item.text}
+                <span className="font-medium">{item.text}</span>
               </motion.li>
             ))}
           </motion.ul>
