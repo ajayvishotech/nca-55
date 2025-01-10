@@ -6,10 +6,25 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Clock, LogOut, User, Home, BookOpen, TestTube2, Target, GraduationCap, Building2, Landmark, BookOpenCheck } from "lucide-react";
+import { 
+  Clock, 
+  LogOut, 
+  User, 
+  Home, 
+  BookOpen, 
+  TestTube2, 
+  Target, 
+  GraduationCap, 
+  Building2, 
+  Landmark, 
+  BookOpenCheck,
+  UserCircle,
+  GraduationCap2
+} from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 export const Header = () => {
@@ -30,6 +45,9 @@ export const Header = () => {
     { icon: TestTube2, label: "Mock Tests", value: "8", href: "/mock-tests" },
     { icon: Target, label: "Progress", value: "65%", href: "/profile" },
   ];
+
+  const selectedCourseData = courses.find(c => c.name === selectedCourse);
+  const IconComponent = selectedCourseData?.icon;
 
   const MobileMenu = () => (
     <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
@@ -83,14 +101,11 @@ export const Header = () => {
     </Sheet>
   );
 
-  const selectedCourseData = courses.find(c => c.name === selectedCourse);
-  const IconComponent = selectedCourseData?.icon;
-
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center">
         <Link to="/" className="flex items-center gap-2">
-          <span className="font-heading font-bold bg-gradient-to-r from-primary to-primary-foreground bg-clip-text text-transparent">
+          <span className="font-heading font-bold text-blue-600 hover:text-blue-700 transition-colors">
             Nanjil Career Academy
           </span>
         </Link>
@@ -144,6 +159,19 @@ export const Header = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuItem asChild>
+                  <Link to="/profile" className="flex items-center gap-2">
+                    <UserCircle className="w-4 h-4" />
+                    <span>My Profile</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/enroll" className="flex items-center gap-2">
+                    <GraduationCap2 className="w-4 h-4" />
+                    <span>Enroll in Courses</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 {menuItems.map((item) => (
                   <DropdownMenuItem key={item.label} asChild>
                     <Link to={item.href} className="flex items-center gap-2">
@@ -155,6 +183,7 @@ export const Header = () => {
                     </Link>
                   </DropdownMenuItem>
                 ))}
+                <DropdownMenuSeparator />
                 <DropdownMenuItem className="text-destructive focus:text-destructive">
                   <LogOut className="w-4 h-4 mr-2" />
                   Logout
