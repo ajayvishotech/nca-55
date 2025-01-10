@@ -37,7 +37,7 @@ export default {
           foreground: "#FFFFFF",
         },
         accent: {
-          DEFAULT: "#F97316",
+          DEFAULT: "#10B981", // Changed from #F97316 (orange) to #10B981 (green)
           foreground: "#FFFFFF",
         },
         success: {
