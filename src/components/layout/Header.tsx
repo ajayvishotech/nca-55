@@ -13,7 +13,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
   Clock, 
   LogOut, 
-  User, 
   Home, 
   BookOpen, 
   TestTube2, 
@@ -30,10 +29,10 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [selectedCourse, setSelectedCourse] = useState("UPSC-CSE");
+  const [enrolledCourses, setEnrolledCourses] = useState(['UPSC-CSE']); // This would typically come from your auth/user context
   const isMobile = useIsMobile();
 
-  const courses = [
+  const availableCourses = [
     { 
       id: 1, 
       name: "Competitive Exams",
@@ -83,8 +82,12 @@ export const Header = () => {
     { icon: Target, label: "Progress", value: "65%", href: "/profile" },
   ];
 
-  const selectedCourseData = courses.find(c => c.name === selectedCourse);
-  const IconComponent = selectedCourseData?.icon;
+  // Function to handle course enrollment
+  const handleEnrollCourse = (courseName: string) => {
+    if (!enrolledCourses.includes(courseName)) {
+      setEnrolledCourses([...enrolledCourses, courseName]);
+    }
+  };
 
   const MobileMenu = () => (
     <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
@@ -154,41 +157,20 @@ export const Header = () => {
                 variant="outline" 
                 className="gap-2 bg-accent/5 hover:bg-accent/10"
               >
-                {IconComponent && <IconComponent className="h-4 w-4" />}
-                {selectedCourse}
+                {enrolledCourses.length > 2 
+                  ? `${enrolledCourses.length} Courses` 
+                  : enrolledCourses.join(', ')}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-[280px]">
-              {courses.map((category) => (
-                <div key={category.id}>
-                  <DropdownMenuItem className="gap-2 font-semibold">
-                    <category.icon className="h-4 w-4" />
-                    {category.name}
-                  </DropdownMenuItem>
-                  {category.subcategories.map((course) => (
-                    <DropdownMenuItem 
-                      key={course.id}
-                      className="pl-8 gap-2 cursor-pointer"
-                      onClick={() => setSelectedCourse(course.name)}
-                    >
-                      {course.name}
-                      <DropdownMenu>
-                        <DropdownMenuTrigger className="ml-auto">
-                          <Clock3 className="h-3 w-3 text-muted-foreground" />
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          {course.modes.map((mode) => (
-                            <DropdownMenuItem key={mode}>
-                              <Clock className="h-3 w-3 mr-2" />
-                              {mode}
-                            </DropdownMenuItem>
-                          ))}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </DropdownMenuItem>
-                  ))}
-                  <DropdownMenuSeparator />
-                </div>
+            <DropdownMenuContent align="start" className="w-[200px]">
+              {enrolledCourses.map((course) => (
+                <DropdownMenuItem 
+                  key={course}
+                  className="gap-2"
+                >
+                  <GraduationCap className="h-4 w-4" />
+                  {course}
+                </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
@@ -223,11 +205,46 @@ export const Header = () => {
                     <span>My Profile</span>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/enroll" className="flex items-center gap-2">
-                    <GraduationCap className="w-4 h-4" />
-                    <span>Enroll in Courses</span>
-                  </Link>
+                <DropdownMenuItem>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger className="flex items-center gap-2 w-full">
+                      <GraduationCap className="w-4 h-4" />
+                      <span>Enroll in Courses</span>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-[280px]">
+                      {availableCourses.map((category) => (
+                        <div key={category.id}>
+                          <DropdownMenuItem className="gap-2 font-semibold">
+                            <category.icon className="h-4 w-4" />
+                            {category.name}
+                          </DropdownMenuItem>
+                          {category.subcategories.map((course) => (
+                            <DropdownMenuItem 
+                              key={course.id}
+                              className="pl-8 gap-2 cursor-pointer"
+                              onClick={() => handleEnrollCourse(course.name)}
+                            >
+                              {course.name}
+                              <DropdownMenu>
+                                <DropdownMenuTrigger className="ml-auto">
+                                  <Clock3 className="h-3 w-3 text-muted-foreground" />
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent>
+                                  {course.modes.map((mode) => (
+                                    <DropdownMenuItem key={mode}>
+                                      <Clock className="h-3 w-3 mr-2" />
+                                      {mode}
+                                    </DropdownMenuItem>
+                                  ))}
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </DropdownMenuItem>
+                          ))}
+                          <DropdownMenuSeparator />
+                        </div>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 {menuItems.map((item) => (
