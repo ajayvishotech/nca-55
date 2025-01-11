@@ -1,13 +1,13 @@
-import { Book, Home, TestTube, Newspaper, MessageSquare } from "lucide-react";
+import { Trophy, BookOpen, Newspaper, TestTube2, MessageSquare } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
 const navigation = [
-  { name: "Milestone", href: "/", icon: Home },
-  { name: "Study Materials", href: "/materials", icon: Book },
+  { name: "Milestone", href: "/", icon: Trophy },
+  { name: "Study Materials", href: "/materials", icon: BookOpen },
   { name: "Current Affairs", href: "/current-affairs", icon: Newspaper },
-  { name: "Mock Tests", href: "/mock-tests", icon: TestTube },
+  { name: "Mock Tests", href: "/mock-tests", icon: TestTube2 },
   { name: "Doubts & Solutions", href: "/doubts", icon: MessageSquare },
 ];
 

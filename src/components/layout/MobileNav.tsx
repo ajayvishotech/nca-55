@@ -1,12 +1,12 @@
-import { Home, Book, Newspaper, TestTube, MessageSquare } from "lucide-react";
+import { Trophy, BookOpen, Newspaper, TestTube2, MessageSquare } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
 
 const navigation = [
-  { name: "Milestone", href: "/", icon: Home },
-  { name: "Materials", href: "/materials", icon: Book },
+  { name: "Milestone", href: "/", icon: Trophy },
+  { name: "Materials", href: "/materials", icon: BookOpen },
   { name: "Affairs", href: "/current-affairs", icon: Newspaper },
-  { name: "Tests", href: "/mock-tests", icon: TestTube },
+  { name: "Tests", href: "/mock-tests", icon: TestTube2 },
   { name: "Doubts", href: "/doubts", icon: MessageSquare },
 ];
 
@@ -33,6 +33,7 @@ export const MobileNav = () => {
             <motion.div
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
+              className="flex flex-col items-center"
             >
               <item.icon className="h-5 w-5" />
               <span className="text-[10px] mt-1 font-medium">{item.name}</span>
