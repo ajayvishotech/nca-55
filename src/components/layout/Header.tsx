@@ -23,14 +23,20 @@ import {
   BookOpenCheck,
   UserCircle,
   School,
-  Clock3
+  Clock3,
+  Edit2,
+  Save,
+  X
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useToast } from "@/hooks/use-toast";
 
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [enrolledCourses, setEnrolledCourses] = useState(['UPSC-CSE']); // This would typically come from your auth/user context
   const isMobile = useIsMobile();
+  const { toast } = useToast();
+  const [isEditing, setIsEditing] = useState(false);
 
   const availableCourses = [
     { 
@@ -94,20 +100,71 @@ export const Header = () => {
       <SheetContent side="right" className="w-full p-0">
         <div className="flex flex-col h-full bg-background">
           <div className="p-4 border-b">
-            <div className="flex items-center gap-3">
-              <Avatar>
-                <AvatarImage src="/placeholder.svg" />
-                <AvatarFallback>JD</AvatarFallback>
-              </Avatar>
-              <div>
-                <h2 className="font-semibold">John Doe</h2>
-                <p className="text-sm text-muted-foreground">john.doe@example.com</p>
+            {isEditing ? (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h2 className="font-semibold">Edit Profile</h2>
+                  <div className="flex gap-2">
+                    <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)}>
+                      <X className="h-4 w-4" />
+                    </Button>
+                    <Button size="sm" onClick={() => {
+                      setIsEditing(false);
+                      toast({
+                        title: "Profile updated",
+                        description: "Your changes have been saved successfully."
+                      });
+                    }}>
+                      <Save className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+                <Input 
+                  defaultValue="John Doe"
+                  placeholder="Name"
+                  className="w-full"
+                />
+                <Input 
+                  defaultValue="john.doe@example.com"
+                  placeholder="Email"
+                  className="w-full"
+                />
               </div>
-            </div>
+            ) : (
+              <div className="flex items-center gap-3">
+                <Avatar>
+                  <AvatarImage src="/placeholder.svg" />
+                  <AvatarFallback>JD</AvatarFallback>
+                </Avatar>
+                <div className="flex-1">
+                  <h2 className="font-semibold">John Doe</h2>
+                  <p className="text-sm text-muted-foreground">john.doe@example.com</p>
+                </div>
+                <Button variant="ghost" size="icon" onClick={() => setIsEditing(true)}>
+                  <Edit2 className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
           </div>
           
           <div className="flex-1 overflow-auto">
             <nav className="flex flex-col p-4 space-y-2">
+              <Link
+                to="/enroll-courses"
+                className="flex items-center gap-3 p-3 rounded-lg hover:bg-accent"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <GraduationCap className="w-5 h-5" />
+                <span>Enroll in Courses</span>
+              </Link>
+              <Link
+                to="/dashboard"
+                className="flex items-center gap-3 p-3 rounded-lg hover:bg-accent"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Home className="w-5 h-5" />
+                <span>Dashboard</span>
+              </Link>
               {menuItems.map((item) => (
                 <Link
                   key={item.label}
@@ -128,7 +185,6 @@ export const Header = () => {
               variant="destructive" 
               className="w-full"
               onClick={() => {
-                // Add logout logic here
                 setMobileMenuOpen(false);
               }}
             >
