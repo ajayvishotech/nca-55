@@ -13,6 +13,7 @@ import Doubts from "./pages/Doubts";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
+import EnrollCourses from "./pages/EnrollCourses";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,7 @@ const App = () => (
               <Route path="/current-affairs" element={<CurrentAffairs />} />
               <Route path="/mock-tests" element={<MockTests />} />
               <Route path="/doubts" element={<Doubts />} />
+              <Route path="/enroll-courses" element={<EnrollCourses />} />
             </Route>
           </Routes>
         </StreakProvider>

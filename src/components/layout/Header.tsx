@@ -205,46 +205,11 @@ export const Header = () => {
                     <span>My Profile</span>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger className="flex items-center gap-2 w-full">
-                      <GraduationCap className="w-4 h-4" />
-                      <span>Enroll in Courses</span>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-[280px]">
-                      {availableCourses.map((category) => (
-                        <div key={category.id}>
-                          <DropdownMenuItem className="gap-2 font-semibold">
-                            <category.icon className="h-4 w-4" />
-                            {category.name}
-                          </DropdownMenuItem>
-                          {category.subcategories.map((course) => (
-                            <DropdownMenuItem 
-                              key={course.id}
-                              className="pl-8 gap-2 cursor-pointer"
-                              onClick={() => handleEnrollCourse(course.name)}
-                            >
-                              {course.name}
-                              <DropdownMenu>
-                                <DropdownMenuTrigger className="ml-auto">
-                                  <Clock3 className="h-3 w-3 text-muted-foreground" />
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent>
-                                  {course.modes.map((mode) => (
-                                    <DropdownMenuItem key={mode}>
-                                      <Clock className="h-3 w-3 mr-2" />
-                                      {mode}
-                                    </DropdownMenuItem>
-                                  ))}
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            </DropdownMenuItem>
-                          ))}
-                          <DropdownMenuSeparator />
-                        </div>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                <DropdownMenuItem asChild>
+                  <Link to="/enroll-courses" className="flex items-center gap-2">
+                    <GraduationCap className="w-4 h-4" />
+                    <span>Enroll in Courses</span>
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 {menuItems.map((item) => (
