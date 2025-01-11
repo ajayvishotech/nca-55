@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import {
   Card,
   CardContent,
@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { MessageSquare, ThumbsUp, Clock, User, Shield } from "lucide-react";
+import { MessageSquare, ThumbsUp, Clock, User, Shield, BookOpen } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface Reply {
@@ -39,6 +39,17 @@ interface Doubt {
   likes: number;
   replies: Reply[];
 }
+
+const subjects = [
+  "Economics",
+  "History",
+  "Geography",
+  "Polity",
+  "Science & Technology",
+  "Current Affairs",
+  "Ethics",
+  "Environment"
+];
 
 const sampleDoubts: Doubt[] = [
   {
@@ -159,15 +170,18 @@ const Doubts = () => {
   return (
     <div className="space-y-6 animate-fadeIn">
       <div className="flex flex-col gap-4">
-        <h1 className="font-heading text-2xl font-bold">Doubts & Solutions</h1>
-        <p className="text-muted-foreground">
+        <h1 className="font-heading text-2xl font-bold text-gray-800 dark:text-gray-200">
+          <MessageSquare className="inline-block mr-2 text-primary" />
+          Doubts & Solutions
+        </h1>
+        <p className="text-gray-600 dark:text-gray-400">
           Get help with your questions from our expert educators and fellow students
         </p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Ask a Question</CardTitle>
+          <CardTitle className="text-gray-800 dark:text-gray-200">Ask a Question</CardTitle>
           <CardDescription>
             Share your doubts with the community
           </CardDescription>
@@ -181,11 +195,11 @@ const Doubts = () => {
               <SelectValue placeholder="Select subject" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Economics">Economics</SelectItem>
-              <SelectItem value="History">History</SelectItem>
-              <SelectItem value="Geography">Geography</SelectItem>
-              <SelectItem value="Polity">Polity</SelectItem>
-              <SelectItem value="Science">Science & Technology</SelectItem>
+              {subjects.map((subject) => (
+                <SelectItem key={subject} value={subject}>
+                  {subject}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
           
@@ -198,7 +212,7 @@ const Doubts = () => {
           
           <Button 
             onClick={handleAskQuestion}
-            className="w-full"
+            className="w-full bg-primary hover:bg-primary/90"
           >
             <MessageSquare className="mr-2 h-4 w-4" />
             Post Question
@@ -212,10 +226,13 @@ const Doubts = () => {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <User className="h-5 w-5 text-gray-500" />
+                  <BookOpen className="h-5 w-5 text-primary" />
                   <div>
-                    <CardTitle className="text-lg">{doubt.subject}</CardTitle>
+                    <CardTitle className="text-lg text-gray-800 dark:text-gray-200">
+                      {doubt.subject}
+                    </CardTitle>
                     <CardDescription className="flex items-center gap-2">
+                      <User className="h-4 w-4" />
                       <span>{doubt.userName}</span>
                       <span>•</span>
                       <Clock className="h-4 w-4" />
@@ -227,6 +244,7 @@ const Doubts = () => {
                   variant="outline"
                   size="sm"
                   onClick={() => handleLike(doubt.id)}
+                  className="text-gray-600 dark:text-gray-400"
                 >
                   <ThumbsUp className="mr-2 h-4 w-4" />
                   {doubt.likes}
@@ -238,8 +256,10 @@ const Doubts = () => {
               
               <div className="space-y-4 mt-6">
                 {doubt.replies.map((reply) => (
-                  <div
+                  <motion.div
                     key={reply.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
                     className={`ml-6 p-4 rounded-lg ${
                       reply.userType === "staff" 
                         ? "bg-primary/5 border border-primary/10" 
@@ -252,12 +272,14 @@ const Doubts = () => {
                       ) : (
                         <User className="h-4 w-4 text-gray-500" />
                       )}
-                      <span className="font-medium">{reply.userName}</span>
+                      <span className="font-medium text-gray-800 dark:text-gray-200">
+                        {reply.userName}
+                      </span>
                       <span className="text-sm text-gray-500">•</span>
                       <span className="text-sm text-gray-500">{reply.timestamp}</span>
                     </div>
                     <p className="text-gray-800 dark:text-gray-200">{reply.content}</p>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
 
