@@ -64,49 +64,49 @@ export const StreakDisplay = () => {
   const progress = ((xpPoints % 100) / 100) * 100;
 
   return (
-    <Card className="p-6 space-y-4 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 animate-fadeIn">
+    <Card className="p-3 md:p-6 space-y-3 md:space-y-4 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 animate-fadeIn">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="p-2 bg-white rounded-full shadow-lg dark:bg-gray-800">
+        <div className="flex items-center gap-2 md:gap-4">
+          <div className="p-1.5 md:p-2 bg-white rounded-full shadow-lg dark:bg-gray-800">
             {getStreakIcon()}
           </div>
           <div>
-            <h3 className="text-2xl font-bold font-heading">
+            <h3 className="text-lg md:text-2xl font-bold font-heading">
               {currentStreak} Day{currentStreak !== 1 ? 's' : ''} Streak
             </h3>
-            <p className="text-sm text-muted-foreground">{getMotivationalMessage()}</p>
+            <p className="text-xs md:text-sm text-muted-foreground">{getMotivationalMessage()}</p>
           </div>
         </div>
-        <div className="flex items-center gap-4">
-          <Badge variant="secondary" className="text-lg px-4 py-2">
+        <div className="flex items-center gap-2 md:gap-4">
+          <Badge variant="secondary" className="text-sm md:text-lg px-2 md:px-4 py-1 md:py-2">
             Level {level}
           </Badge>
-          <div className="flex items-center gap-2">
-            <Gem className="h-5 w-5 text-blue-500" />
-            <span className="font-bold">{gems}</span>
+          <div className="flex items-center gap-1 md:gap-2">
+            <Gem className="h-4 w-4 md:h-5 md:w-5 text-blue-500" />
+            <span className="text-sm md:text-base font-bold">{gems}</span>
           </div>
         </div>
       </div>
 
-      <div className="space-y-2">
-        <div className="flex justify-between text-sm">
+      <div className="space-y-1 md:space-y-2">
+        <div className="flex justify-between text-xs md:text-sm">
           <span>XP Progress</span>
-          <span>{xpToNextLevel} XP to Level {level + 1}</span>
+          <span>{(level * 100) - xpPoints} XP to Level {level + 1}</span>
         </div>
-        <Progress value={progress} className="h-2" />
+        <Progress value={((xpPoints % 100) / 100) * 100} className="h-1.5 md:h-2" />
       </div>
 
       <div className="flex items-center justify-between pt-2">
-        <Badge variant="outline" className="text-sm">
+        <Badge variant="outline" className="text-xs md:text-sm">
           {getStreakTier()} Tier
         </Badge>
         <Button
           variant="outline"
           size="sm"
           onClick={handleUseStreakFreeze}
-          className="flex items-center gap-2"
+          className="flex items-center gap-1 md:gap-2 text-xs md:text-sm"
         >
-          <Shield className="h-4 w-4" />
+          <Shield className="h-3 w-3 md:h-4 md:w-4" />
           Streak Freezes: {streakFreezes}
         </Button>
       </div>
