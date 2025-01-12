@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input"; // Add this import
+import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,7 +34,7 @@ import { useToast } from "@/hooks/use-toast";
 
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [enrolledCourses, setEnrolledCourses] = useState(['UPSC-CSE']); // This would typically come from your auth/user context
+  const [enrolledCourses, setEnrolledCourses] = useState(['UPSC-CSE']);
   const isMobile = useIsMobile();
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
@@ -155,14 +155,6 @@ export const Header = () => {
                 <GraduationCap className="w-5 h-5" />
                 <span>Enroll in Courses</span>
               </Link>
-              <Link
-                to="/dashboard"
-                className="flex items-center gap-3 p-3 rounded-lg hover:bg-accent"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <Home className="w-5 h-5" />
-                <span>Dashboard</span>
-              </Link>
               {menuItems.map((item) => (
                 <Link
                   key={item.label}
@@ -172,7 +164,6 @@ export const Header = () => {
                 >
                   <item.icon className="w-5 h-5" />
                   <span className="flex-1">{item.label}</span>
-                  <span className="text-muted-foreground">{item.value}</span>
                 </Link>
               ))}
             </nav>
@@ -271,9 +262,6 @@ export const Header = () => {
                     <Link to={item.href} className="flex items-center gap-2">
                       <item.icon className="w-4 h-4" />
                       <span>{item.label}</span>
-                      <span className="ml-auto text-muted-foreground">
-                        {item.value}
-                      </span>
                     </Link>
                   </DropdownMenuItem>
                 ))}
