@@ -83,10 +83,7 @@ export const Header = () => {
   ];
 
   const menuItems = [
-    { icon: Home, label: "Dashboard", value: "24h", href: "/dashboard" },
-    { icon: BookOpen, label: "Study Hours", value: "24h", href: "/materials" },
-    { icon: TestTube2, label: "Mock Tests", value: "8", href: "/mock-tests" },
-    { icon: Target, label: "Progress", value: "65%", href: "/profile" },
+    { icon: Home, label: "Dashboard", href: "/dashboard" },
   ];
 
   // Function to handle course enrollment
