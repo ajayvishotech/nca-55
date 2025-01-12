@@ -152,96 +152,197 @@ export const QuizGame = () => {
     }
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.5,
+        staggerChildren: 0.1
+      }
+    },
+    exit: {
+      opacity: 0,
+      scale: 0.8,
+      transition: { duration: 0.3 }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.3 }
+    }
+  };
+
   return (
-    <Card className="p-6 space-y-4 bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-950 dark:to-blue-950">
-      <motion.div 
-        className="flex items-center justify-between"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+    <Card className="p-6 space-y-4 bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-950 dark:to-blue-950 relative overflow-hidden">
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+        className="relative z-10"
       >
-        <div className="flex items-center gap-2">
-          <Brain className="h-6 w-6 text-purple-500 animate-pulse" />
-          <h2 className="text-xl font-bold font-heading">Knowledge Kingdom</h2>
-        </div>
-        <div className="flex items-center gap-2">
-          <Badge variant="secondary" className="gap-1">
-            <Trophy className="h-4 w-4" />
-            Score: {score}
-          </Badge>
-          <Badge variant="outline" className="gap-1">
-            <Timer className="h-4 w-4" />
-            {timeLeft}s
-          </Badge>
-        </div>
+        <motion.div 
+          className="flex items-center justify-between"
+          variants={itemVariants}
+        >
+          <div className="flex items-center gap-2">
+            <Brain className="h-6 w-6 text-purple-500 animate-pulse" />
+            <h2 className="text-xl font-bold font-heading bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-600">
+              Knowledge Kingdom
+            </h2>
+          </div>
+          <div className="flex items-center gap-2">
+            <motion.div
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Badge variant="secondary" className="gap-1">
+                <Trophy className="h-4 w-4" />
+                Score: {score}
+              </Badge>
+            </motion.div>
+            <motion.div
+              animate={{
+                scale: timeLeft <= 5 ? [1, 1.1, 1] : 1,
+                color: timeLeft <= 5 ? ["#ef4444", "#ffffff", "#ef4444"] : "#ffffff",
+              }}
+              transition={{ repeat: timeLeft <= 5 ? Infinity : 0, duration: 0.5 }}
+            >
+              <Badge variant="outline" className="gap-1">
+                <Timer className="h-4 w-4" />
+                {timeLeft}s
+              </Badge>
+            </motion.div>
+          </div>
+        </motion.div>
+
+        <AnimatePresence mode="wait">
+          {gameState === "ready" && (
+            <motion.div 
+              className="text-center space-y-4 py-12"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
+              transition={{ duration: 0.5, type: "spring", bounce: 0.4 }}
+            >
+              <motion.div
+                animate={{ 
+                  y: [0, -10, 0],
+                  rotate: [0, -5, 5, 0]
+                }}
+                transition={{ 
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              >
+                <Crown className="h-16 w-16 mx-auto text-yellow-500" />
+              </motion.div>
+              <motion.h3 
+                className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-600"
+                variants={itemVariants}
+              >
+                Ready to Challenge?
+              </motion.h3>
+              <motion.p 
+                className="text-muted-foreground"
+                variants={itemVariants}
+              >
+                Test your knowledge of current affairs!
+              </motion.p>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Button 
+                  onClick={startGame} 
+                  className="gap-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold px-8 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  <Sword className="h-5 w-5" />
+                  Start Quest
+                </Button>
+              </motion.div>
+            </motion.div>
+          )}
+
+          {gameState === "playing" && (
+            <motion.div 
+              className="space-y-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <div className="flex justify-between items-center">
+                <div className="space-y-1">
+                  <p className="text-sm text-muted-foreground">
+                    Question {currentQuestion + 1}/{SAMPLE_QUESTIONS.length}
+                  </p>
+                  <Progress value={(currentQuestion / SAMPLE_QUESTIONS.length) * 100} className="w-32" />
+                </div>
+                <PowerUpBar 
+                  powerUps={powerUps}
+                  onUsePowerUp={usePowerUp}
+                  disabled={selectedAnswer !== null}
+                />
+              </div>
+
+              <QuestionDisplay
+                question={SAMPLE_QUESTIONS[currentQuestion]}
+                selectedAnswer={selectedAnswer}
+                onAnswer={handleAnswer}
+                isCorrect={isCorrect}
+              />
+            </motion.div>
+          )}
+
+          {gameState === "finished" && (
+            <motion.div 
+              className="text-center space-y-4 py-8"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+            >
+              <Gem className="h-12 w-12 mx-auto text-blue-500 animate-pulse" />
+              <h3 className="text-2xl font-bold">Quest Complete!</h3>
+              <p className="text-muted-foreground">
+                Final Score: {score} | Streak: {streak}
+              </p>
+              <Button onClick={startGame} className="gap-2">
+                <Shield className="h-4 w-4" />
+                Play Again
+              </Button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
 
-      <AnimatePresence mode="wait">
-        {gameState === "ready" && (
-          <motion.div 
-            className="text-center space-y-4 py-8"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-          >
-            <Crown className="h-12 w-12 mx-auto text-yellow-500 animate-bounce" />
-            <h3 className="text-2xl font-bold">Ready to Challenge?</h3>
-            <p className="text-muted-foreground">Test your knowledge of current affairs!</p>
-            <Button onClick={startGame} className="gap-2 animate-pulse">
-              <Sword className="h-4 w-4" />
-              Start Quest
-            </Button>
-          </motion.div>
-        )}
-
-        {gameState === "playing" && (
-          <motion.div 
-            className="space-y-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <div className="flex justify-between items-center">
-              <div className="space-y-1">
-                <p className="text-sm text-muted-foreground">
-                  Question {currentQuestion + 1}/{SAMPLE_QUESTIONS.length}
-                </p>
-                <Progress value={(currentQuestion / SAMPLE_QUESTIONS.length) * 100} className="w-32" />
-              </div>
-              <PowerUpBar 
-                powerUps={powerUps}
-                onUsePowerUp={usePowerUp}
-                disabled={selectedAnswer !== null}
-              />
-            </div>
-
-            <QuestionDisplay
-              question={SAMPLE_QUESTIONS[currentQuestion]}
-              selectedAnswer={selectedAnswer}
-              onAnswer={handleAnswer}
-              isCorrect={isCorrect}
-            />
-          </motion.div>
-        )}
-
-        {gameState === "finished" && (
-          <motion.div 
-            className="text-center space-y-4 py-8"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-          >
-            <Gem className="h-12 w-12 mx-auto text-blue-500 animate-pulse" />
-            <h3 className="text-2xl font-bold">Quest Complete!</h3>
-            <p className="text-muted-foreground">
-              Final Score: {score} | Streak: {streak}
-            </p>
-            <Button onClick={startGame} className="gap-2">
-              <Shield className="h-4 w-4" />
-              Play Again
-            </Button>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <motion.div
+        className="absolute top-0 left-0 w-full h-full pointer-events-none"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.5 }}
+      >
+        <motion.div
+          className="absolute top-10 left-10 w-20 h-20 rounded-full bg-purple-500/10"
+          animate={{
+            scale: [1, 1.2, 1],
+            rotate: [0, 90, 0],
+          }}
+          transition={{ duration: 8, repeat: Infinity }}
+        />
+        <motion.div
+          className="absolute bottom-10 right-10 w-32 h-32 rounded-full bg-blue-500/10"
+          animate={{
+            scale: [1.2, 1, 1.2],
+            rotate: [90, 0, 90],
+          }}
+          transition={{ duration: 10, repeat: Infinity }}
+        />
+      </motion.div>
     </Card>
   );
 };
