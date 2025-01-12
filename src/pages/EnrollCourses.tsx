@@ -17,14 +17,14 @@ const CourseCard = ({
   <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={onClick}>
     <CardHeader>
       <div className="flex items-center gap-2">
-        <div className="p-2 rounded-full bg-blue-100">
-          <Icon className="w-6 h-6 text-blue-600" />
+        <div className="p-1.5 md:p-2 rounded-full bg-blue-100">
+          <Icon className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
         </div>
-        <CardTitle className="text-xl">{title}</CardTitle>
+        <CardTitle className="text-base md:text-xl">{title}</CardTitle>
       </div>
     </CardHeader>
     <CardContent>
-      <CardDescription className="text-base">{description}</CardDescription>
+      <CardDescription className="text-xs md:text-sm leading-relaxed">{description}</CardDescription>
     </CardContent>
   </Card>
 );
@@ -51,29 +51,32 @@ const EnrollCourses = () => {
   ];
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Course Enrollment</h1>
-        <p className="text-muted-foreground">
+    <div className="container mx-auto py-4 md:py-8 px-3 md:px-8">
+      <div className="mb-4 md:mb-8">
+        <h1 className="text-lg md:text-3xl font-bold mb-1 md:mb-2">Course Enrollment</h1>
+        <p className="text-xs md:text-sm text-muted-foreground">
           Choose the program that best fits your educational goals and schedule
         </p>
       </div>
       
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-3 md:gap-6 md:grid-cols-2 lg:grid-cols-3">
         {courses.map((course) => (
           <CourseCard
             key={course.title}
             {...course}
             onClick={() => {
-              // Here you can add logic to handle enrollment
               console.log(`Enrolling in ${course.title}`);
             }}
           />
         ))}
       </div>
 
-      <div className="mt-8 flex justify-center">
-        <Button variant="outline" onClick={() => navigate(-1)}>
+      <div className="mt-4 md:mt-8 flex justify-center">
+        <Button 
+          variant="outline" 
+          onClick={() => navigate(-1)}
+          className="text-xs md:text-sm"
+        >
           Go Back
         </Button>
       </div>
