@@ -10,6 +10,7 @@ import { PowerUpBar } from "./PowerUpBar";
 import { QuestionDisplay } from "./QuestionDisplay";
 import { Question } from "./types";
 import { motion, AnimatePresence } from "framer-motion";
+import { GameBackground3D } from "./GameBackground3D";
 
 const SAMPLE_QUESTIONS: Question[] = [
   {
@@ -179,92 +180,92 @@ export const QuizGame = () => {
   };
 
   return (
-    <Card className="p-6 space-y-4 bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-950 dark:to-blue-950 relative overflow-hidden">
+    <Card className="p-6 space-y-4 bg-gradient-to-br from-purple-50/80 to-blue-50/80 dark:from-purple-950/80 dark:to-blue-950/80 relative overflow-hidden backdrop-blur-sm">
       <motion.div
         initial="hidden"
         animate="visible"
         variants={containerVariants}
         className="relative z-10"
       >
-        <motion.div 
-          className="flex items-center justify-between"
-          variants={itemVariants}
-        >
-          <div className="flex items-center gap-2">
-            <Brain className="h-6 w-6 text-purple-500 animate-pulse" />
-            <h2 className="text-xl font-bold font-heading bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-600">
-              Knowledge Kingdom
-            </h2>
-          </div>
-          <div className="flex items-center gap-2">
-            <motion.div
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Badge variant="secondary" className="gap-1">
-                <Trophy className="h-4 w-4" />
-                Score: {score}
-              </Badge>
-            </motion.div>
-            <motion.div
-              animate={{
-                scale: timeLeft <= 5 ? [1, 1.1, 1] : 1,
-                color: timeLeft <= 5 ? ["#ef4444", "#ffffff", "#ef4444"] : "#ffffff",
-              }}
-              transition={{ repeat: timeLeft <= 5 ? Infinity : 0, duration: 0.5 }}
-            >
-              <Badge variant="outline" className="gap-1">
-                <Timer className="h-4 w-4" />
-                {timeLeft}s
-              </Badge>
-            </motion.div>
-          </div>
-        </motion.div>
-
         <AnimatePresence mode="wait">
           {gameState === "ready" && (
             <motion.div 
-              className="text-center space-y-4 py-12"
+              className="text-center space-y-6 py-16"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
               transition={{ duration: 0.5, type: "spring", bounce: 0.4 }}
             >
+              <GameBackground3D />
+              
               <motion.div
                 animate={{ 
-                  y: [0, -10, 0],
-                  rotate: [0, -5, 5, 0]
+                  y: [0, -20, 0],
+                  rotateZ: [-5, 5, -5],
                 }}
                 transition={{ 
-                  duration: 2,
+                  duration: 4,
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
+                className="relative"
               >
-                <Crown className="h-16 w-16 mx-auto text-yellow-500" />
+                <Crown className="h-24 w-24 mx-auto text-yellow-500 drop-shadow-xl" />
+                <motion.div
+                  className="absolute -inset-4"
+                  animate={{
+                    scale: [1, 1.2, 1],
+                    opacity: [0.5, 0, 0.5],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
+                  <div className="w-full h-full rounded-full bg-yellow-500/20 blur-xl" />
+                </motion.div>
               </motion.div>
+
               <motion.h3 
-                className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-600"
+                className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-600 drop-shadow-lg"
                 variants={itemVariants}
               >
                 Ready to Challenge?
               </motion.h3>
+              
               <motion.p 
-                className="text-muted-foreground"
+                className="text-xl md:text-2xl text-muted-foreground"
                 variants={itemVariants}
               >
                 Test your knowledge of current affairs!
               </motion.p>
+
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                className="pt-4"
               >
                 <Button 
                   onClick={startGame} 
-                  className="gap-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold px-8 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                  className="gap-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold px-8 py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-lg"
                 >
-                  <Sword className="h-5 w-5" />
+                  <Sword className="h-6 w-6" />
                   Start Quest
+                  <motion.div
+                    className="absolute inset-0 rounded-xl"
+                    animate={{
+                      boxShadow: [
+                        "0 0 0 0 rgba(155, 135, 245, 0)",
+                        "0 0 0 10px rgba(155, 135, 245, 0)",
+                      ],
+                    }}
+                    transition={{
+                      duration: 1.5,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  />
                 </Button>
               </motion.div>
             </motion.div>
