@@ -188,19 +188,19 @@ export const Header = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center">
-        <Link to="/" className="flex items-center gap-2">
-          <span className="font-heading font-bold text-blue-600 hover:text-blue-700 transition-colors">
+      <div className="container flex h-12 md:h-14 items-center">
+        <Link to="/" className="flex items-center gap-1 md:gap-2">
+          <span className="font-heading text-sm md:text-base font-bold text-blue-600 hover:text-blue-700 transition-colors">
             Nanjil Career Academy
           </span>
         </Link>
 
-        <div className="ml-4 flex-1">
+        <div className="ml-2 md:ml-4 flex-1">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button 
                 variant="outline" 
-                className="gap-2 bg-accent/5 hover:bg-accent/10"
+                className="gap-1 md:gap-2 bg-accent/5 hover:bg-accent/10 text-xs md:text-sm h-7 md:h-9"
               >
                 {enrolledCourses.length > 2 
                   ? `${enrolledCourses.length} Courses` 
@@ -211,9 +211,9 @@ export const Header = () => {
               {enrolledCourses.map((course) => (
                 <DropdownMenuItem 
                   key={course}
-                  className="gap-2"
+                  className="gap-2 text-xs md:text-sm"
                 >
-                  <GraduationCap className="h-4 w-4" />
+                  <GraduationCap className="h-3 w-3 md:h-4 md:w-4" />
                   {course}
                 </DropdownMenuItem>
               ))}

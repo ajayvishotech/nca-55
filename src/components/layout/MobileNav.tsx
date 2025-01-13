@@ -17,15 +17,15 @@ export const MobileNav = () => {
       animate={{ y: 0, opacity: 1 }}
       className="fixed bottom-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-t md:hidden"
     >
-      <div className="flex justify-around items-center h-16 px-2">
+      <div className="flex justify-around items-center h-14 px-1">
         {navigation.map((item) => (
           <NavLink
             key={item.name}
             to={item.href}
             className={({ isActive }) =>
-              `flex flex-col items-center justify-center p-2 rounded-lg transition-all duration-200 ${
+              `flex flex-col items-center justify-center p-1 rounded-lg transition-all duration-200 ${
                 isActive 
-                  ? "text-primary scale-110 transform" 
+                  ? "text-primary scale-105 transform" 
                   : "text-gray-500 hover:text-primary/70"
               }`
             }
@@ -35,8 +35,8 @@ export const MobileNav = () => {
               whileTap={{ scale: 0.9 }}
               className="flex flex-col items-center"
             >
-              <item.icon className="h-5 w-5" />
-              <span className="text-[10px] mt-1 font-medium">{item.name}</span>
+              <item.icon className="h-4 w-4" />
+              <span className="text-[9px] mt-0.5 font-medium">{item.name}</span>
             </motion.div>
           </NavLink>
         ))}
