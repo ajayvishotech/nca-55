@@ -6,8 +6,7 @@ import * as THREE from 'three';
 const FloatingCrystal = () => {
   return (
     <Float speed={1.5} rotationIntensity={1} floatIntensity={2}>
-      <motion.group
-        scale={[1, 1, 1]}
+      <motion.div
         animate={{
           rotateY: Math.PI * 2,
           rotateX: Math.PI * 0.25,
@@ -17,16 +16,16 @@ const FloatingCrystal = () => {
           repeat: Infinity,
           ease: "linear"
         }}
-      >
-        <mesh>
-          <octahedronGeometry args={[1, 0]} />
-          <meshPhongMaterial 
-            color="#9b87f5"
-            shininess={100}
-            specular={new THREE.Color("#ffffff")}
-          />
-        </mesh>
-      </motion.group>
+        style={{ display: 'none' }} // This is just for the animation values
+      />
+      <mesh>
+        <octahedronGeometry args={[1, 0]} />
+        <meshPhongMaterial 
+          color="#9b87f5"
+          shininess={100}
+          specular={new THREE.Color("#ffffff")}
+        />
+      </mesh>
     </Float>
   );
 };
