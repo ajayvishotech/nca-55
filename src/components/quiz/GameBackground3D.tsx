@@ -1,12 +1,12 @@
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Float, Stars } from '@react-three/drei';
-import { motion } from 'framer-motion-3d';
+import { motion } from 'framer-motion';
 import * as THREE from 'three';
 
 const FloatingCrystal = () => {
   return (
     <Float speed={1.5} rotationIntensity={1} floatIntensity={2}>
-      <motion.mesh
+      <motion.group
         scale={[1, 1, 1]}
         animate={{
           rotateY: Math.PI * 2,
@@ -18,13 +18,15 @@ const FloatingCrystal = () => {
           ease: "linear"
         }}
       >
-        <octahedronGeometry args={[1, 0]} />
-        <meshPhongMaterial 
-          color="#9b87f5"
-          shininess={100}
-          specular={new THREE.Color("#ffffff")}
-        />
-      </motion.mesh>
+        <mesh>
+          <octahedronGeometry args={[1, 0]} />
+          <meshPhongMaterial 
+            color="#9b87f5"
+            shininess={100}
+            specular={new THREE.Color("#ffffff")}
+          />
+        </mesh>
+      </motion.group>
     </Float>
   );
 };
