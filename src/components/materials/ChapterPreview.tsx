@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ChevronRight, FileText, Zap } from "lucide-react";
+import { FileViewer } from "./FileViewer";
+import { VideoPlayer } from "./VideoPlayer";
 
 interface ChapterPreviewProps {
   chapter: string;
@@ -61,6 +63,20 @@ const ChapterPreview = ({ chapter }: ChapterPreviewProps) => {
             <h2 className="text-xl font-medium">{chapters[0]}</h2>
           </div>
 
+          {/* Study Materials Section */}
+          <div className="space-y-6">
+            <div className="border-b pb-4">
+              <h3 className="text-lg font-medium mb-4">Study Materials</h3>
+              <FileViewer />
+            </div>
+
+            {/* Course Videos Section */}
+            <div className="pt-4">
+              <h3 className="text-lg font-medium mb-4">Course Videos</h3>
+              <VideoPlayer />
+            </div>
+          </div>
+
           {/* Notes and Practice section */}
           <div className="grid md:grid-cols-2 gap-4">
             <div className="p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors">
@@ -80,26 +96,6 @@ const ChapterPreview = ({ chapter }: ChapterPreviewProps) => {
                 </div>
                 <Button size="sm">START</Button>
               </div>
-            </div>
-          </div>
-
-          {/* Video lessons section */}
-          <div className="space-y-4">
-            <h3 className="font-medium">Video Lessons</h3>
-            <div className="space-y-3">
-              {[1, 2, 3].map((_, index) => (
-                <div key={index} className="p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center">
-                      <ChevronRight className="text-white" />
-                    </div>
-                    <div>
-                      <h4 className="font-medium">Lesson {index + 1}</h4>
-                      <p className="text-sm text-muted-foreground">26 mins</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
             </div>
           </div>
         </div>
