@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -38,6 +38,7 @@ export const Header = () => {
   const isMobile = useIsMobile();
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
+  const navigate = useNavigate();
 
   const availableCourses = [
     { 
@@ -91,6 +92,15 @@ export const Header = () => {
     if (!enrolledCourses.includes(courseName)) {
       setEnrolledCourses([...enrolledCourses, courseName]);
     }
+  };
+
+  const handleLogout = () => {
+    // Add your logout logic here
+    toast({
+      title: "Logged out successfully",
+      description: "See you soon!",
+    });
+    navigate("/login");
   };
 
   const MobileMenu = () => (
@@ -173,9 +183,7 @@ export const Header = () => {
             <Button 
               variant="destructive" 
               className="w-full"
-              onClick={() => {
-                setMobileMenuOpen(false);
-              }}
+              onClick={handleLogout}
             >
               <LogOut className="w-4 h-4 mr-2" />
               Logout
@@ -266,7 +274,7 @@ export const Header = () => {
                   </DropdownMenuItem>
                 ))}
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-destructive focus:text-destructive">
+                <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={handleLogout}>
                   <LogOut className="w-4 h-4 mr-2" />
                   Logout
                 </DropdownMenuItem>
