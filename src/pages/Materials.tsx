@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Accordion } from "@/components/ui/accordion";
 import SubjectItem from "@/components/materials/SubjectItem";
 import ChapterPreview from "@/components/materials/ChapterPreview";
+import { FileViewer } from "@/components/materials/FileViewer";
 
 const subjects = [
   {
@@ -96,6 +97,8 @@ const Materials = () => {
         <h1 className="font-heading text-2xl font-bold">Study Materials</h1>
         <p className="text-muted-foreground">Access your course materials</p>
       </div>
+
+      <FileViewer />
 
       <div className="grid gap-4">
         {subjects.map((subject) => (
