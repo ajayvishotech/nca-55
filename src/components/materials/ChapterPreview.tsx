@@ -1,11 +1,17 @@
 import { Button } from "@/components/ui/button";
-import { ChevronRight, FileText, Zap } from "lucide-react";
+import { ChevronRight, FileText } from "lucide-react";
+import VideoPlayer from "./VideoPlayer";
+import NotesViewer from "./NotesViewer";
+import { useState } from "react";
 
 interface ChapterPreviewProps {
   chapter: string;
 }
 
 const ChapterPreview = ({ chapter }: ChapterPreviewProps) => {
+  const [selectedLesson, setSelectedLesson] = useState<number | null>(null);
+  const [showNotes, setShowNotes] = useState(false);
+
   const getChapters = () => {
     switch (chapter) {
       case "Economics - NCERT Summary":
@@ -31,6 +37,10 @@ const ChapterPreview = ({ chapter }: ChapterPreviewProps) => {
   };
 
   const chapters = getChapters();
+
+  const handleNotesClick = () => {
+    setShowNotes(!showNotes);
+  };
 
   return (
     <div className="p-6 space-y-8">
@@ -63,19 +73,22 @@ const ChapterPreview = ({ chapter }: ChapterPreviewProps) => {
 
           {/* Notes and Practice section */}
           <div className="grid md:grid-cols-2 gap-4">
-            <div className="p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors">
+            <div 
+              className="p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors cursor-pointer"
+              onClick={handleNotesClick}
+            >
               <div className="flex items-center gap-3">
-                <FileText className="text-orange-500" />
+                <FileText className="text-primary h-5 w-5" />
                 <div>
                   <h3 className="font-medium">Notes</h3>
-                  <p className="text-sm text-muted-foreground">Available on android app</p>
+                  <p className="text-sm text-muted-foreground">View chapter notes</p>
                 </div>
               </div>
             </div>
             <div className="p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <Zap className="text-primary" />
+                  <ChevronRight className="text-primary" />
                   <h3 className="font-medium">Practice</h3>
                 </div>
                 <Button size="sm">START</Button>
@@ -83,21 +96,45 @@ const ChapterPreview = ({ chapter }: ChapterPreviewProps) => {
             </div>
           </div>
 
+          {/* Notes viewer */}
+          {showNotes && (
+            <NotesViewer
+              lessonNumber={1}
+              title={`Notes: ${chapters[0]}`}
+            />
+          )}
+
           {/* Video lessons section */}
           <div className="space-y-4">
             <h3 className="font-medium">Video Lessons</h3>
-            <div className="space-y-3">
-              {[1, 2, 3].map((_, index) => (
-                <div key={index} className="p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center">
-                      <ChevronRight className="text-white" />
-                    </div>
-                    <div>
-                      <h4 className="font-medium">Lesson {index + 1}</h4>
-                      <p className="text-sm text-muted-foreground">26 mins</p>
+            <div className="space-y-6">
+              {[1, 2, 3].map((lessonNum) => (
+                <div key={lessonNum} className="space-y-4">
+                  <div 
+                    className="p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors cursor-pointer"
+                    onClick={() => setSelectedLesson(selectedLesson === lessonNum ? null : lessonNum)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center">
+                          <ChevronRight className="text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-medium">Lesson {lessonNum}</h4>
+                          <p className="text-sm text-muted-foreground">26 mins</p>
+                        </div>
+                      </div>
+                      <Button variant="ghost" size="sm">
+                        {selectedLesson === lessonNum ? "Hide" : "Watch"}
+                      </Button>
                     </div>
                   </div>
+                  {selectedLesson === lessonNum && (
+                    <VideoPlayer
+                      lessonNumber={lessonNum}
+                      duration="26:00"
+                    />
+                  )}
                 </div>
               ))}
             </div>
