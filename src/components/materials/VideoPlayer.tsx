@@ -9,18 +9,19 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 
 interface Video {
   id: string;
   title: string;
-  url: string;
-  duration: number; // in seconds
+  youtubeId: string; // Changed from url to youtubeId
+  duration: number;
 }
 
 interface VideoProgress {
   id: string;
-  progress: number; // percentage watched
+  progress: number;
 }
 
 export const VideoPlayer = () => {
@@ -28,13 +29,13 @@ export const VideoPlayer = () => {
     {
       id: "1",
       title: "Economics Fundamentals - Chapter 1",
-      url: "https://www.youtube.com/embed/example1",
+      youtubeId: "VIDEO_ID_1", // Replace with actual YouTube video ID
       duration: 1200,
     },
     {
       id: "2",
       title: "Geography Basics - Physical Features",
-      url: "https://www.youtube.com/embed/example2",
+      youtubeId: "VIDEO_ID_2", // Replace with actual YouTube video ID
       duration: 900,
     },
   ]);
@@ -71,7 +72,6 @@ export const VideoPlayer = () => {
 
   const handleVideoSelect = (video: Video) => {
     setSelectedVideo(video);
-    // If video hasn't been started, initialize progress
     if (!progress.some((p) => p.id === video.id)) {
       updateProgress(video.id, 0);
     }
@@ -85,8 +85,6 @@ export const VideoPlayer = () => {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-2xl font-bold">Course Videos</h2>
-      
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {videos.map((video) => {
           const currentProgress = getVideoProgress(video.id);
@@ -131,14 +129,17 @@ export const VideoPlayer = () => {
         <DialogContent className="max-w-4xl h-[80vh]">
           <DialogHeader>
             <DialogTitle>{selectedVideo?.title}</DialogTitle>
+            <DialogDescription>
+              You can toggle fullscreen mode using the player controls
+            </DialogDescription>
           </DialogHeader>
           {selectedVideo && (
             <div className="relative w-full h-full">
               <iframe
-                src={`${selectedVideo.url}?autoplay=1`}
+                src={`https://www.youtube.com/embed/${selectedVideo.youtubeId}?autoplay=1&enablejsapi=1`}
                 className="w-full h-full rounded-md"
                 title={selectedVideo.title}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
                 allowFullScreen
               />
             </div>
