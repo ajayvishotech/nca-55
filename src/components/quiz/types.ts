@@ -4,6 +4,8 @@ export interface Question {
   options: string[];
   correctAnswer: number;
   category: string;
+  attachmentUrl?: string; // For Google Drive file URLs
+  attachmentType?: 'pdf' | 'image' | 'video'; // Type of attachment
 }
 
 export interface PowerUp {
@@ -20,4 +22,11 @@ export interface GameState {
   selectedAnswer: number | null;
   streak: number;
   gameState: "ready" | "playing" | "finished";
+}
+
+export interface DriveFile {
+  id: string;
+  name: string;
+  mimeType: string;
+  webViewLink: string;
 }

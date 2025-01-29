@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Question } from "./types";
 import { motion } from "framer-motion";
+import { FileText, Image, Video } from "lucide-react";
+import { Card } from "@/components/ui/card";
 
 interface QuestionDisplayProps {
   question: Question;
@@ -11,15 +13,42 @@ interface QuestionDisplayProps {
 }
 
 export const QuestionDisplay = ({ question, selectedAnswer, onAnswer, isCorrect }: QuestionDisplayProps) => {
+  const renderAttachment = () => {
+    if (!question.attachmentUrl) return null;
+
+    const attachmentIcons = {
+      pdf: <FileText className="h-5 w-5" />,
+      image: <Image className="h-5 w-5" />,
+      video: <Video className="h-5 w-5" />
+    };
+
+    return (
+      <Card className="p-4 mb-4 bg-accent/10">
+        <div className="flex items-center gap-2">
+          {question.attachmentType && attachmentIcons[question.attachmentType]}
+          <a 
+            href={question.attachmentUrl} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-primary hover:underline"
+          >
+            View Attachment
+          </a>
+        </div>
+      </Card>
+    );
+  };
+
   return (
     <div className="space-y-4">
-      <motion.p 
+      <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-lg font-medium"
+        className="space-y-4"
       >
-        {question.question}
-      </motion.p>
+        <p className="text-lg font-medium">{question.question}</p>
+        {renderAttachment()}
+      </motion.div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {question.options.map((option, index) => (
           <motion.div
