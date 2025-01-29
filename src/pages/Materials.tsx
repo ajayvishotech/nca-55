@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Accordion } from "@/components/ui/accordion";
 import SubjectItem from "@/components/materials/SubjectItem";
+import ChapterPreview from "@/components/materials/ChapterPreview";
 
 const subjects = [
   {
