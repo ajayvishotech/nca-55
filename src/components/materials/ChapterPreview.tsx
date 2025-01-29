@@ -12,6 +12,14 @@ const ChapterPreview = ({ chapter }: ChapterPreviewProps) => {
   const [selectedLesson, setSelectedLesson] = useState<number | null>(null);
   const [showNotes, setShowNotes] = useState(false);
 
+  // This would typically come from your backend
+  const getDriveFileIds = (lessonNumber: number) => {
+    return {
+      video: undefined, // Replace with actual Drive file IDs when available
+      notes: undefined, // Replace with actual Drive file IDs when available
+    };
+  };
+
   const getChapters = () => {
     switch (chapter) {
       case "Economics - NCERT Summary":
@@ -101,6 +109,7 @@ const ChapterPreview = ({ chapter }: ChapterPreviewProps) => {
             <NotesViewer
               lessonNumber={1}
               title={`Notes: ${chapters[0]}`}
+              driveFileId={getDriveFileIds(1).notes}
             />
           )}
 
@@ -133,6 +142,7 @@ const ChapterPreview = ({ chapter }: ChapterPreviewProps) => {
                     <VideoPlayer
                       lessonNumber={lessonNum}
                       duration="26:00"
+                      driveFileId={getDriveFileIds(lessonNum).video}
                     />
                   )}
                 </div>

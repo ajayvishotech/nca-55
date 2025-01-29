@@ -1,18 +1,39 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Download, Maximize, Volume2, VolumeX, Subtitles } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getFileFromDrive } from "@/utils/driveUtils";
+import { DriveFile } from "@/components/quiz/types";
 
 interface VideoPlayerProps {
   lessonNumber: number;
   duration: string;
+  driveFileId?: string;
 }
 
-const VideoPlayer = ({ lessonNumber, duration }: VideoPlayerProps) => {
+const VideoPlayer = ({ lessonNumber, duration, driveFileId }: VideoPlayerProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [showSubtitles, setShowSubtitles] = useState(false);
+  const [videoUrl, setVideoUrl] = useState<string>("");
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const loadVideoFromDrive = async () => {
+      if (driveFileId) {
+        try {
+          const driveFile = await getFileFromDrive(driveFileId);
+          setVideoUrl(driveFile.webViewLink);
+        } catch (error) {
+          console.error("Error loading video from Drive:", error);
+        }
+      } else {
+        setVideoUrl(`/lesson-${lessonNumber}.mp4`);
+      }
+    };
+
+    loadVideoFromDrive();
+  }, [driveFileId, lessonNumber]);
 
   const handlePlayPause = () => {
     if (videoRef.current) {
@@ -38,9 +59,22 @@ const VideoPlayer = ({ lessonNumber, duration }: VideoPlayerProps) => {
     }
   };
 
-  const handleDownload = () => {
-    // Implement download functionality here
-    console.log(`Downloading Lesson ${lessonNumber}`);
+  const handleDownload = async () => {
+    if (driveFileId) {
+      try {
+        const driveFile = await getFileFromDrive(driveFileId);
+        window.open(driveFile.webViewLink, '_blank');
+      } catch (error) {
+        console.error("Error downloading from Drive:", error);
+      }
+    } else {
+      const link = document.createElement('a');
+      link.href = videoUrl;
+      link.download = `lesson-${lessonNumber}.mp4`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   };
 
   return (
@@ -48,7 +82,7 @@ const VideoPlayer = ({ lessonNumber, duration }: VideoPlayerProps) => {
       <video
         ref={videoRef}
         className="w-full aspect-video"
-        src={`/lesson-${lessonNumber}.mp4`}
+        src={videoUrl}
         controls={false}
       >
         {showSubtitles && (

@@ -1,15 +1,51 @@
 import { Button } from "@/components/ui/button";
 import { FileText, Download } from "lucide-react";
+import { useEffect, useState } from "react";
+import { getFileFromDrive } from "@/utils/driveUtils";
+import { DriveFile } from "@/components/quiz/types";
 
 interface NotesViewerProps {
   lessonNumber: number;
   title: string;
+  driveFileId?: string;
 }
 
-const NotesViewer = ({ lessonNumber, title }: NotesViewerProps) => {
-  const handleDownload = () => {
-    // Implement download functionality here
-    console.log(`Downloading notes for lesson ${lessonNumber}`);
+const NotesViewer = ({ lessonNumber, title, driveFileId }: NotesViewerProps) => {
+  const [pdfUrl, setPdfUrl] = useState<string>("");
+
+  useEffect(() => {
+    const loadNotesFromDrive = async () => {
+      if (driveFileId) {
+        try {
+          const driveFile = await getFileFromDrive(driveFileId);
+          setPdfUrl(driveFile.webViewLink);
+        } catch (error) {
+          console.error("Error loading notes from Drive:", error);
+        }
+      } else {
+        setPdfUrl(`/notes-${lessonNumber}.pdf`);
+      }
+    };
+
+    loadNotesFromDrive();
+  }, [driveFileId, lessonNumber]);
+
+  const handleDownload = async () => {
+    if (driveFileId) {
+      try {
+        const driveFile = await getFileFromDrive(driveFileId);
+        window.open(driveFile.webViewLink, '_blank');
+      } catch (error) {
+        console.error("Error downloading from Drive:", error);
+      }
+    } else {
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.download = `notes-${lessonNumber}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   };
 
   return (
@@ -29,9 +65,12 @@ const NotesViewer = ({ lessonNumber, title }: NotesViewerProps) => {
           Download Notes
         </Button>
       </div>
-      <div className="prose max-w-none">
-        {/* Add your notes content here */}
-        <p>Notes content for lesson {lessonNumber} goes here...</p>
+      <div className="w-full aspect-[4/3] rounded-lg overflow-hidden">
+        <iframe
+          src={pdfUrl}
+          className="w-full h-full border-0"
+          title={`Notes for ${title}`}
+        />
       </div>
     </div>
   );
