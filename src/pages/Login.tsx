@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { Eye, EyeOff, LogIn, ArrowRight } from "lucide-react";
+import { Eye, EyeOff, LogIn, ArrowRight, GraduationCap } from "lucide-react";
 import {
   Form,
   FormControl,
