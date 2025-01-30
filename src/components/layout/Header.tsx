@@ -34,7 +34,7 @@ import { useToast } from "@/hooks/use-toast";
 
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [enrolledCourses, setEnrolledCourses] = useState(['UPSC-CSE']);
+  const [enrolledCourses, setEnrolledCourses] = useState(['Demo-UPSC-CSE']);
   const isMobile = useIsMobile();
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
@@ -101,6 +101,15 @@ export const Header = () => {
       description: "See you soon!",
     });
     navigate("/login");
+  };
+
+  // Function to handle course switching
+  const handleSwitchCourse = (courseName: string) => {
+    toast({
+      title: "Course Switched",
+      description: `Switched to ${courseName}`,
+    });
+    // Additional logic for course switching can be added here
   };
 
   const MobileMenu = () => (
@@ -219,7 +228,8 @@ export const Header = () => {
               {enrolledCourses.map((course) => (
                 <DropdownMenuItem 
                   key={course}
-                  className="gap-2 text-xs md:text-sm"
+                  className="gap-2 text-xs md:text-sm cursor-pointer"
+                  onClick={() => handleSwitchCourse(course)}
                 >
                   <GraduationCap className="h-3 w-3 md:h-4 md:w-4" />
                   {course}
