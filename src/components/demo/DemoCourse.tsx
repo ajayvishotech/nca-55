@@ -6,6 +6,7 @@ import VideoPlayer from "../materials/VideoPlayer";
 import NotesViewer from "../materials/NotesViewer";
 import { useToast } from "@/hooks/use-toast";
 import { Lock, PlayCircle, FileText, TestTubes, Trophy } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface DemoCourseProps {
   courseName: string;
@@ -15,6 +16,7 @@ interface DemoCourseProps {
 const DemoCourse = ({ courseName, onComplete }: DemoCourseProps) => {
   const [progress, setProgress] = useState(0);
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [currentSection, setCurrentSection] = useState<'video' | 'notes' | 'test' | null>(null);
 
   const handleSectionComplete = () => {
