@@ -18,6 +18,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import DemoCourse from "@/components/demo/DemoCourse";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -39,6 +40,7 @@ const resetPasswordSchema = z.object({
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
+  const [selectedDemoCourse, setSelectedDemoCourse] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -122,6 +124,22 @@ const Login = () => {
     }
   };
 
+  const availableDemoCourses = [
+    "UPSC-CSE",
+    "SSC",
+    "Banking",
+    "NEET",
+    "JEE"
+  ];
+
+  const handleDemoComplete = () => {
+    toast({
+      title: "Demo Completed!",
+      description: "Contact NCA Prep admin to get your login credentials.",
+    });
+    setSelectedDemoCourse(null);
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50/40 p-4">
       <Card className="w-full max-w-md p-8 space-y-8 animate-fadeIn">
@@ -200,15 +218,34 @@ const Login = () => {
           </TabsContent>
 
           <TabsContent value="register">
-            <div className="text-center space-y-4">
-              <h3 className="text-lg font-medium">Create an Account</h3>
-              <p className="text-sm text-muted-foreground">
-                Contact your institution administrator to get started with NCA PREP.
-              </p>
-              <Button variant="outline" className="w-full" onClick={() => navigate("/enroll-courses")}>
-                View Available Courses <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
+            {selectedDemoCourse ? (
+              <DemoCourse 
+                courseName={selectedDemoCourse}
+                onComplete={handleDemoComplete}
+              />
+            ) : (
+              <div className="space-y-6">
+                <div className="text-center">
+                  <h3 className="text-lg font-medium mb-4">Try a Demo Course</h3>
+                  <p className="text-sm text-muted-foreground mb-6">
+                    Experience NCA PREP with our interactive demo courses
+                  </p>
+                </div>
+                <div className="grid gap-3">
+                  {availableDemoCourses.map((course) => (
+                    <Button
+                      key={course}
+                      variant="outline"
+                      className="w-full justify-start"
+                      onClick={() => setSelectedDemoCourse(course)}
+                    >
+                      <GraduationCap className="mr-2 h-4 w-4" />
+                      {course}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
           </TabsContent>
         </Tabs>
 
