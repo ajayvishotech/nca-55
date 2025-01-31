@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { DashboardLayout } from "./components/layout/DashboardLayout";
 import { StreakProvider } from "./contexts/StreakContext";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -16,25 +16,11 @@ import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import EnrollCourses from "./pages/EnrollCourses";
-import { ReactNode } from "react";
 
-// Create a client
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      retry: 1,
-    },
-  },
-});
-
-// Create a wrapper component to properly type children
-const QueryProvider = ({ children }: { children: ReactNode }) => (
-  <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-);
+const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryProvider>
+  <QueryClientProvider client={queryClient}>
     <BrowserRouter>
       <AuthProvider>
         <TooltipProvider>
@@ -45,29 +31,26 @@ const App = () => (
               <Route path="/login" element={<Login />} />
               <Route path="/" element={<Index />} />
               <Route
-                path="/"
                 element={
                   <ProtectedRoute>
-                    <DashboardLayout>
-                      <Routes>
-                        <Route path="/dashboard" element={<Dashboard />} />
-                        <Route path="/profile" element={<Profile />} />
-                        <Route path="/materials" element={<Materials />} />
-                        <Route path="/current-affairs" element={<CurrentAffairs />} />
-                        <Route path="/mock-tests" element={<MockTests />} />
-                        <Route path="/doubts" element={<Doubts />} />
-                        <Route path="/enroll-courses" element={<EnrollCourses />} />
-                      </Routes>
-                    </DashboardLayout>
+                    <DashboardLayout />
                   </ProtectedRoute>
                 }
-              />
+              >
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/materials" element={<Materials />} />
+                <Route path="/current-affairs" element={<CurrentAffairs />} />
+                <Route path="/mock-tests" element={<MockTests />} />
+                <Route path="/doubts" element={<Doubts />} />
+                <Route path="/enroll-courses" element={<EnrollCourses />} />
+              </Route>
             </Routes>
           </StreakProvider>
         </TooltipProvider>
       </AuthProvider>
     </BrowserRouter>
-  </QueryProvider>
+  </QueryClientProvider>
 );
 
 export default App;
