@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -11,188 +11,62 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAuth } from "@/contexts/AuthContext";
 import { 
-  Clock, 
   LogOut, 
-  Home, 
-  BookOpen, 
-  TestTube2, 
-  Target, 
-  GraduationCap, 
-  Building2, 
-  Landmark, 
-  BookOpenCheck,
+  Home,
   UserCircle,
-  School,
-  Clock3,
-  Edit2,
-  Save,
-  X
+  GraduationCap,
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useToast } from "@/hooks/use-toast";
 
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [enrolledCourses, setEnrolledCourses] = useState(['Demo-UPSC-CSE']);
+  const { user, signOut } = useAuth();
   const isMobile = useIsMobile();
-  const { toast } = useToast();
-  const [isEditing, setIsEditing] = useState(false);
-  const navigate = useNavigate();
-
-  const availableCourses = [
-    { 
-      id: 1, 
-      name: "Competitive Exams",
-      icon: GraduationCap,
-      subcategories: [
-        { id: 'upsc', name: 'UPSC-CSE', modes: ['Full Time', 'Part Time'] },
-        { id: 'ssc', name: 'SSC', modes: ['Full Time', 'Part Time'] },
-        { id: 'rrb', name: 'RRB', modes: ['Full Time', 'Part Time'] },
-        { id: 'tnpsc', name: 'TNPSC', modes: ['Full Time', 'Part Time'] },
-      ]
-    },
-    { 
-      id: 2, 
-      name: "Banking",
-      icon: Landmark,
-      subcategories: [
-        { id: 'ibps', name: 'IBPS', modes: ['Full Time', 'Part Time'] },
-        { id: 'sbi', name: 'SBI', modes: ['Full Time', 'Part Time'] },
-        { id: 'rbi', name: 'RBI', modes: ['Full Time', 'Part Time'] },
-      ]
-    },
-    { 
-      id: 3, 
-      name: "School",
-      icon: School,
-      subcategories: [
-        { id: 'neet', name: 'NEET', modes: ['Full Time', 'Part Time'] },
-        { id: 'jee', name: 'JEE Main & Advanced', modes: ['Full Time', 'Part Time'] },
-        { id: 'kvpy', name: 'KVPY', modes: ['Full Time', 'Part Time'] },
-      ]
-    },
-    { 
-      id: 4, 
-      name: "Teaching",
-      icon: BookOpenCheck,
-      subcategories: [
-        { id: 'tet', name: 'TET', modes: ['Full Time', 'Part Time'] },
-        { id: 'net', name: 'NET/SET', modes: ['Full Time', 'Part Time'] },
-      ]
-    },
-  ];
 
   const menuItems = [
     { icon: Home, label: "Dashboard", href: "/dashboard" },
+    { icon: UserCircle, label: "Profile", href: "/profile" },
   ];
-
-  // Function to handle course enrollment
-  const handleEnrollCourse = (courseName: string) => {
-    if (!enrolledCourses.includes(courseName)) {
-      setEnrolledCourses([...enrolledCourses, courseName]);
-    }
-  };
-
-  const handleLogout = () => {
-    // Add your logout logic here
-    toast({
-      title: "Logged out successfully",
-      description: "See you soon!",
-    });
-    navigate("/login");
-  };
-
-  // Function to handle course switching
-  const handleSwitchCourse = (courseName: string) => {
-    toast({
-      title: "Course Switched",
-      description: `Switched to ${courseName}`,
-    });
-    // Additional logic for course switching can be added here
-  };
 
   const MobileMenu = () => (
     <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
       <SheetContent side="right" className="w-full p-0">
         <div className="flex flex-col h-full bg-background">
           <div className="p-4 border-b">
-            {isEditing ? (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h2 className="font-semibold">Edit Profile</h2>
-                  <div className="flex gap-2">
-                    <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)}>
-                      <X className="h-4 w-4" />
-                    </Button>
-                    <Button size="sm" onClick={() => {
-                      setIsEditing(false);
-                      toast({
-                        title: "Profile updated",
-                        description: "Your changes have been saved successfully."
-                      });
-                    }}>
-                      <Save className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-                <Input 
-                  defaultValue="John Doe"
-                  placeholder="Name"
-                  className="w-full"
-                />
-                <Input 
-                  defaultValue="john.doe@example.com"
-                  placeholder="Email"
-                  className="w-full"
-                />
+            <div className="flex items-center gap-3">
+              <Avatar>
+                <AvatarImage src="/placeholder.svg" />
+                <AvatarFallback>
+                  {user?.email?.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1">
+                <h2 className="font-semibold">{user?.email}</h2>
               </div>
-            ) : (
-              <div className="flex items-center gap-3">
-                <Avatar>
-                  <AvatarImage src="/placeholder.svg" />
-                  <AvatarFallback>JD</AvatarFallback>
-                </Avatar>
-                <div className="flex-1">
-                  <h2 className="font-semibold">John Doe</h2>
-                  <p className="text-sm text-muted-foreground">john.doe@example.com</p>
-                </div>
-                <Button variant="ghost" size="icon" onClick={() => setIsEditing(true)}>
-                  <Edit2 className="h-4 w-4" />
-                </Button>
-              </div>
-            )}
+            </div>
           </div>
           
-          <div className="flex-1 overflow-auto">
-            <nav className="flex flex-col p-4 space-y-2">
+          <nav className="flex flex-col p-4 space-y-2">
+            {menuItems.map((item) => (
               <Link
-                to="/enroll-courses"
+                key={item.label}
+                to={item.href}
                 className="flex items-center gap-3 p-3 rounded-lg hover:bg-accent"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                <GraduationCap className="w-5 h-5" />
-                <span>Enroll in Courses</span>
+                <item.icon className="w-5 h-5" />
+                <span>{item.label}</span>
               </Link>
-              {menuItems.map((item) => (
-                <Link
-                  key={item.label}
-                  to={item.href}
-                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-accent"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <item.icon className="w-5 h-5" />
-                  <span className="flex-1">{item.label}</span>
-                </Link>
-              ))}
-            </nav>
-          </div>
+            ))}
+          </nav>
           
-          <div className="p-4 border-t">
+          <div className="mt-auto p-4 border-t">
             <Button 
               variant="destructive" 
               className="w-full"
-              onClick={handleLogout}
+              onClick={signOut}
             >
               <LogOut className="w-4 h-4 mr-2" />
               Logout
@@ -205,91 +79,72 @@ export const Header = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-12 md:h-14 items-center">
-        <Link to="/" className="flex items-center gap-1 md:gap-2">
-          <span className="font-heading text-sm md:text-base font-bold text-blue-600 hover:text-blue-700 transition-colors">
-            Nanjil Career Academy
+      <div className="container flex h-14 items-center">
+        <Link to="/" className="flex items-center gap-2">
+          <span className="font-heading text-base font-bold text-primary">
+            NCA PREP
           </span>
         </Link>
 
-        <div className="ml-2 md:ml-4 flex-1">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button 
-                variant="outline" 
-                className="gap-1 md:gap-2 bg-accent/5 hover:bg-accent/10 text-xs md:text-sm h-7 md:h-9"
-              >
-                {enrolledCourses.length > 2 
-                  ? `${enrolledCourses.length} Courses` 
-                  : enrolledCourses.join(', ')}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-[200px]">
-              {enrolledCourses.map((course) => (
-                <DropdownMenuItem 
-                  key={course}
-                  className="gap-2 text-xs md:text-sm cursor-pointer"
-                  onClick={() => handleSwitchCourse(course)}
-                >
-                  <GraduationCap className="h-3 w-3 md:h-4 md:w-4" />
-                  {course}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-
         <div className="flex flex-1 items-center justify-end space-x-4">
-          {isMobile ? (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setMobileMenuOpen(true)}
-            >
-              <Avatar className="h-8 w-8">
-                <AvatarImage src="/placeholder.svg" />
-                <AvatarFallback>JD</AvatarFallback>
-              </Avatar>
-            </Button>
-          ) : (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src="/placeholder.svg" />
-                    <AvatarFallback>JD</AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuItem asChild>
-                  <Link to="/profile" className="flex items-center gap-2">
-                    <UserCircle className="w-4 h-4" />
-                    <span>My Profile</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/enroll-courses" className="flex items-center gap-2">
-                    <GraduationCap className="w-4 h-4" />
-                    <span>Enroll in Courses</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                {menuItems.map((item) => (
-                  <DropdownMenuItem key={item.label} asChild>
-                    <Link to={item.href} className="flex items-center gap-2">
-                      <item.icon className="w-4 h-4" />
-                      <span>{item.label}</span>
-                    </Link>
+          {user ? (
+            isMobile ? (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setMobileMenuOpen(true)}
+              >
+                <Avatar className="h-8 w-8">
+                  <AvatarImage src="/placeholder.svg" />
+                  <AvatarFallback>
+                    {user.email?.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+              </Button>
+            ) : (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src="/placeholder.svg" />
+                      <AvatarFallback>
+                        {user.email?.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <div className="flex items-center justify-start gap-2 p-2">
+                    <div className="flex flex-col space-y-1 leading-none">
+                      <p className="font-medium">{user.email}</p>
+                    </div>
+                  </div>
+                  <DropdownMenuSeparator />
+                  {menuItems.map((item) => (
+                    <DropdownMenuItem key={item.label} asChild>
+                      <Link to={item.href} className="flex items-center gap-2">
+                        <item.icon className="w-4 h-4" />
+                        <span>{item.label}</span>
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem 
+                    className="text-destructive focus:text-destructive" 
+                    onClick={signOut}
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
                   </DropdownMenuItem>
-                ))}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={handleLogout}>
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )
+          ) : (
+            <Button asChild>
+              <Link to="/login">
+                Sign In
+              </Link>
+            </Button>
           )}
         </div>
       </div>
