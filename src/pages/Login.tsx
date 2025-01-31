@@ -65,11 +65,18 @@ const Login = () => {
       });
 
       if (error) {
+        console.error("Login error:", error); // Add this for debugging
         if (error.message === "Invalid login credentials") {
           toast({
             variant: "destructive",
             title: "Login failed",
             description: "Invalid email or password. Please try again.",
+          });
+        } else if (error.message.includes("Email not confirmed")) {
+          toast({
+            variant: "destructive",
+            title: "Email not verified",
+            description: "Please check your email and verify your account before logging in.",
           });
         } else {
           toast({
@@ -89,6 +96,7 @@ const Login = () => {
         navigate("/");
       }
     } catch (error: any) {
+      console.error("Unexpected error:", error); // Add this for debugging
       toast({
         variant: "destructive",
         title: "Login failed",
@@ -111,6 +119,7 @@ const Login = () => {
       });
 
       if (error) {
+        console.error("Signup error:", error); // Add this for debugging
         if (error.message.includes("already registered")) {
           toast({
             variant: "destructive",
@@ -135,6 +144,7 @@ const Login = () => {
         signupForm.reset();
       }
     } catch (error: any) {
+      console.error("Unexpected error:", error); // Add this for debugging
       toast({
         variant: "destructive",
         title: "Sign up failed",
