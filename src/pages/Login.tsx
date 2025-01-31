@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { useToast } from "@/components/ui/use-toast";
-import { Eye, EyeOff, LogIn, ArrowRight } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { Eye, EyeOff, LogIn } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -18,19 +18,11 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
+import DemoRegistration from "@/components/demo/DemoRegistration";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
-});
-
-const signupSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
 });
 
 const Login = () => {
@@ -47,15 +39,6 @@ const Login = () => {
     },
   });
 
-  const signupForm = useForm<z.infer<typeof signupSchema>>({
-    resolver: zodResolver(signupSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-      confirmPassword: "",
-    },
-  });
-
   const handleLogin = async (values: z.infer<typeof loginSchema>) => {
     try {
       setIsLoading(true);
@@ -65,7 +48,7 @@ const Login = () => {
       });
 
       if (error) {
-        console.error("Login error:", error); // Add this for debugging
+        console.error("Login error:", error);
         if (error.message === "Invalid login credentials") {
           toast({
             variant: "destructive",
@@ -96,58 +79,10 @@ const Login = () => {
         navigate("/");
       }
     } catch (error: any) {
-      console.error("Unexpected error:", error); // Add this for debugging
+      console.error("Unexpected error:", error);
       toast({
         variant: "destructive",
         title: "Login failed",
-        description: "An unexpected error occurred. Please try again.",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSignup = async (values: z.infer<typeof signupSchema>) => {
-    try {
-      setIsLoading(true);
-      const { data, error } = await supabase.auth.signUp({
-        email: values.email,
-        password: values.password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
-        },
-      });
-
-      if (error) {
-        console.error("Signup error:", error); // Add this for debugging
-        if (error.message.includes("already registered")) {
-          toast({
-            variant: "destructive",
-            title: "Sign up failed",
-            description: "This email is already registered. Please try logging in instead.",
-          });
-        } else {
-          toast({
-            variant: "destructive",
-            title: "Sign up failed",
-            description: error.message,
-          });
-        }
-        return;
-      }
-
-      if (data) {
-        toast({
-          title: "Sign up successful!",
-          description: "Please check your email to verify your account.",
-        });
-        signupForm.reset();
-      }
-    } catch (error: any) {
-      console.error("Unexpected error:", error); // Add this for debugging
-      toast({
-        variant: "destructive",
-        title: "Sign up failed",
         description: "An unexpected error occurred. Please try again.",
       });
     } finally {
@@ -160,13 +95,13 @@ const Login = () => {
       <Card className="w-full max-w-md p-8 space-y-8 animate-fadeIn">
         <div className="text-center space-y-2">
           <h1 className="font-heading text-3xl font-bold text-primary">Welcome to NCA PREP!</h1>
-          <p className="text-muted-foreground">Sign in to your account or create a new one</p>
+          <p className="text-muted-foreground">Sign in to your account or register for a demo</p>
         </div>
 
         <Tabs defaultValue="login" className="space-y-6">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="login">Login</TabsTrigger>
-            <TabsTrigger value="signup">Sign Up</TabsTrigger>
+            <TabsTrigger value="demo">Demo Class</TabsTrigger>
           </TabsList>
 
           <TabsContent value="login">
@@ -238,94 +173,8 @@ const Login = () => {
             </Form>
           </TabsContent>
 
-          <TabsContent value="signup">
-            <Form {...signupForm}>
-              <form onSubmit={signupForm.handleSubmit(handleSignup)} className="space-y-6">
-                <FormField
-                  control={signupForm.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="email"
-                          placeholder="Enter your email"
-                          className="text-base md:text-sm"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={signupForm.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Input
-                            type={showPassword ? "text" : "password"}
-                            placeholder="Enter your password"
-                            className="text-base md:text-sm pr-10"
-                            {...field}
-                          />
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
-                            onClick={() => setShowPassword(!showPassword)}
-                          >
-                            {showPassword ? (
-                              <EyeOff className="h-4 w-4 text-gray-400" />
-                            ) : (
-                              <Eye className="h-4 w-4 text-gray-400" />
-                            )}
-                          </Button>
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={signupForm.control}
-                  name="confirmPassword"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Confirm Password</FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Input
-                            type={showPassword ? "text" : "password"}
-                            placeholder="Confirm your password"
-                            className="text-base md:text-sm pr-10"
-                            {...field}
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
-                  {isLoading ? (
-                    "Creating account..."
-                  ) : (
-                    <>
-                      <ArrowRight className="mr-2 h-4 w-4" /> Create Account
-                    </>
-                  )}
-                </Button>
-              </form>
-            </Form>
+          <TabsContent value="demo">
+            <DemoRegistration />
           </TabsContent>
         </Tabs>
       </Card>

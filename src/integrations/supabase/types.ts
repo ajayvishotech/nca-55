@@ -36,6 +36,42 @@ export type Database = {
         }
         Relationships: []
       }
+      demo_requests: {
+        Row: {
+          course: string
+          created_at: string | null
+          educational_qualification: string
+          email: string
+          id: string
+          name: string
+          occupation_status: string
+          phone_number: string
+          updated_at: string | null
+        }
+        Insert: {
+          course: string
+          created_at?: string | null
+          educational_qualification: string
+          email: string
+          id?: string
+          name: string
+          occupation_status: string
+          phone_number: string
+          updated_at?: string | null
+        }
+        Update: {
+          course?: string
+          created_at?: string | null
+          educational_qualification?: string
+          email?: string
+          id?: string
+          name?: string
+          occupation_status?: string
+          phone_number?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       doubt_replies: {
         Row: {
           content: string

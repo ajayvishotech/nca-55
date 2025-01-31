@@ -15,6 +15,7 @@ import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import EnrollCourses from "./pages/EnrollCourses";
+import DemoCourse from "./components/demo/DemoCourse";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ const App = () => (
           <Sonner />
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/demo/:courseId" element={<DemoCourse courseName="Demo Course" onComplete={() => {}} />} />
             <Route
               path="/"
               element={
