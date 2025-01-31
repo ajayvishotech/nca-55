@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { DashboardLayout } from "./components/layout/DashboardLayout";
 import { StreakProvider } from "./contexts/StreakContext";
 import Index from "./pages/Index";
@@ -26,15 +26,15 @@ const App = () => (
           <Sonner />
           <Routes>
             <Route path="/login" element={<Login />} />
-            <Route element={<DashboardLayout><Outlet /></DashboardLayout>}>
-              <Route path="/" element={<Index />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/materials" element={<Materials />} />
-              <Route path="/current-affairs" element={<CurrentAffairs />} />
-              <Route path="/mock-tests" element={<MockTests />} />
-              <Route path="/doubts" element={<Doubts />} />
-              <Route path="/enroll-courses" element={<EnrollCourses />} />
+            <Route path="/" element={<DashboardLayout />}>
+              <Route index element={<Index />} />
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="materials" element={<Materials />} />
+              <Route path="current-affairs" element={<CurrentAffairs />} />
+              <Route path="mock-tests" element={<MockTests />} />
+              <Route path="doubts" element={<Doubts />} />
+              <Route path="enroll-courses" element={<EnrollCourses />} />
             </Route>
           </Routes>
         </StreakProvider>
