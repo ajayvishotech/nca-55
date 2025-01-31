@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { Eye, EyeOff, LogIn, ArrowRight, GraduationCap } from "lucide-react";
+import { Eye, EyeOff, LogIn, ArrowRight } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -17,8 +17,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import DemoCourse from "@/components/demo/DemoCourse";
 import { supabase } from "@/integrations/supabase/client";
 
 const loginSchema = z.object({
@@ -38,7 +36,6 @@ const signupSchema = z.object({
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedDemoCourse, setSelectedDemoCourse] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -67,18 +64,35 @@ const Login = () => {
         password: values.password,
       });
 
-      if (error) throw error;
+      if (error) {
+        if (error.message === "Invalid login credentials") {
+          toast({
+            variant: "destructive",
+            title: "Login failed",
+            description: "Invalid email or password. Please try again.",
+          });
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Login failed",
+            description: error.message,
+          });
+        }
+        return;
+      }
 
-      toast({
-        title: "Login successful!",
-        description: "Welcome back to NCA PREP.",
-      });
-      navigate("/");
+      if (data?.user) {
+        toast({
+          title: "Login successful!",
+          description: "Welcome back to NCA PREP.",
+        });
+        navigate("/");
+      }
     } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Login failed",
-        description: error.message || "Please check your credentials and try again.",
+        description: "An unexpected error occurred. Please try again.",
       });
     } finally {
       setIsLoading(false);
@@ -96,37 +110,39 @@ const Login = () => {
         },
       });
 
-      if (error) throw error;
+      if (error) {
+        if (error.message.includes("already registered")) {
+          toast({
+            variant: "destructive",
+            title: "Sign up failed",
+            description: "This email is already registered. Please try logging in instead.",
+          });
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Sign up failed",
+            description: error.message,
+          });
+        }
+        return;
+      }
 
-      toast({
-        title: "Sign up successful!",
-        description: "Please check your email to verify your account.",
-      });
+      if (data) {
+        toast({
+          title: "Sign up successful!",
+          description: "Please check your email to verify your account.",
+        });
+        signupForm.reset();
+      }
     } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Sign up failed",
-        description: error.message || "An error occurred during sign up.",
+        description: "An unexpected error occurred. Please try again.",
       });
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const availableDemoCourses = [
-    "UPSC-CSE",
-    "SSC",
-    "Banking",
-    "NEET",
-    "JEE"
-  ];
-
-  const handleDemoComplete = () => {
-    toast({
-      title: "Demo Completed!",
-      description: "Contact NCA Prep admin to get your login credentials.",
-    });
-    setSelectedDemoCourse(null);
   };
 
   return (
