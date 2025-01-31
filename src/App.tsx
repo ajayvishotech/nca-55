@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { DashboardLayout } from "./components/layout/DashboardLayout";
 import { StreakProvider } from "./contexts/StreakContext";
+import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 import Index from "./pages/Index";
 import Materials from "./pages/Materials";
 import CurrentAffairs from "./pages/CurrentAffairs";
@@ -26,7 +27,14 @@ const App = () => (
           <Sonner />
           <Routes>
             <Route path="/login" element={<Login />} />
-            <Route path="/" element={<DashboardLayout />}>
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <DashboardLayout />
+                </ProtectedRoute>
+              }
+            >
               <Route index element={<Index />} />
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="profile" element={<Profile />} />
