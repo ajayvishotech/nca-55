@@ -2,47 +2,35 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { motion } from "framer-motion";
-import { TestTube, Timer, AlertCircle, Trophy, Brain, Target, Sparkles } from "lucide-react";
+import { TestTube, Timer, AlertCircle, Trophy, Brain, Target, Sparkles, Loader2 } from "lucide-react";
 import { QuizGame } from "@/components/quiz/QuizGame";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const MockTests = () => {
-  const [selectedTest, setSelectedTest] = useState<number | null>(null);
+  const [selectedTest, setSelectedTest] = useState<string | null>(null);
 
-  const tests = [
-    {
-      id: 1,
-      title: "General Knowledge",
-      duration: "2 hours",
-      questions: 100,
-      difficulty: "Medium",
-      points: 200,
-    },
-    {
-      id: 2,
-      title: "Current Affairs",
-      duration: "1.5 hours",
-      questions: 75,
-      difficulty: "Hard",
-      points: 150,
-    },
-    {
-      id: 3,
-      title: "Aptitude Test",
-      duration: "1 hour",
-      questions: 50,
-      difficulty: "Easy",
-      points: 100,
-    },
-    {
-      id: 4,
-      title: "Subject Expertise",
-      duration: "2.5 hours",
-      questions: 125,
-      difficulty: "Expert",
-      points: 250,
-    },
-  ];
+  const { data: tests, isLoading } = useQuery({
+    queryKey: ['mock-tests'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('mock_tests')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      
+      return data.map(test => ({
+        id: test.id,
+        title: test.title,
+        duration: `${test.duration} minutes`,
+        questions: Math.floor(test.total_marks / 2), // Assuming 2 marks per question
+        difficulty: test.total_marks > 100 ? "Hard" : test.total_marks > 50 ? "Medium" : "Easy",
+        points: test.total_marks,
+      }));
+    }
+  });
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -81,6 +69,14 @@ const MockTests = () => {
       text: "Detailed performance analysis after completion",
     },
   ];
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[200px]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 animate-fadeIn">
@@ -130,7 +126,7 @@ const MockTests = () => {
         initial="hidden"
         animate="show"
       >
-        {tests.map((test) => (
+        {tests?.map((test) => (
           <motion.div key={test.id} variants={itemVariants}>
             <Card className="group overflow-hidden">
               <motion.div 

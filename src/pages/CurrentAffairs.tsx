@@ -1,54 +1,64 @@
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
+import { Loader2, Calendar, ArrowRight } from "lucide-react";
+import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
-import { Newspaper, Download, Clock } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { motion } from "framer-motion";
 
 const CurrentAffairs = () => {
-  const { toast } = useToast();
+  const { data: affairs, isLoading } = useQuery({
+    queryKey: ['current-affairs'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('current_affairs')
+        .select('*')
+        .order('date', { ascending: false });
+      
+      if (error) throw error;
+      return data;
+    }
+  });
 
-  const handleDownload = () => {
-    toast({
-      title: "Download Started",
-      description: "Today's newspaper is being downloaded.",
-    });
-  };
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[200px]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 animate-fadeIn">
       <div className="flex flex-col gap-4">
         <h1 className="font-heading text-2xl font-bold">Current Affairs</h1>
-        <p className="text-muted-foreground">Stay updated with the latest news</p>
+        <p className="text-muted-foreground">Stay updated with the latest developments</p>
       </div>
 
-      <Button 
-        onClick={handleDownload}
-        className="w-full md:w-auto mb-4 bg-accent hover:bg-accent/90"
-      >
-        <Newspaper className="h-5 w-5 mr-2" />
-        Today's Newspaper
-      </Button>
-
       <div className="grid gap-4">
-        {[1, 2, 3].map((i) => (
-          <Card key={i} className="p-6 cursor-pointer hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="rounded-full bg-primary/10 p-3">
-                  <Newspaper className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <p className="font-medium">Daily Update {i}</p>
+        {affairs?.map((affair) => (
+          <motion.div
+            key={affair.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Card className="p-6 hover:shadow-md transition-shadow">
+              <div className="flex items-start justify-between gap-4">
+                <div className="space-y-2">
+                  <h3 className="font-heading text-lg font-semibold">{affair.title}</h3>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Clock className="h-4 w-4" />
-                    <span>2 hours ago</span>
+                    <Calendar className="h-4 w-4" />
+                    <span>{format(new Date(affair.date), 'PPP')}</span>
                   </div>
+                  <p className="text-muted-foreground line-clamp-2">{affair.content}</p>
                 </div>
+                <Button variant="ghost" size="icon">
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
               </div>
-              <Button variant="ghost" size="sm">
-                <Download className="h-4 w-4" />
-              </Button>
-            </div>
-          </Card>
+            </Card>
+          </motion.div>
         ))}
       </div>
     </div>
