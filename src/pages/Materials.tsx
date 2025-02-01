@@ -4,6 +4,17 @@ import SubjectItem from "@/components/materials/SubjectItem";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
+import { Database } from "@/integrations/supabase/types";
+
+type StudyMaterial = Database['public']['Tables']['study_materials']['Row'];
+
+interface GroupedMaterial {
+  title: string;
+  items: {
+    name: string;
+    chapters: number;
+  }[];
+}
 
 const Materials = () => {
   const { data: materials, isLoading } = useQuery({
@@ -17,7 +28,7 @@ const Materials = () => {
       if (error) throw error;
       
       // Group materials by subject
-      const groupedMaterials = data.reduce((acc, material) => {
+      const groupedMaterials = (data as StudyMaterial[]).reduce<Record<string, GroupedMaterial>>((acc, material) => {
         if (!acc[material.subject]) {
           acc[material.subject] = {
             title: material.subject,
@@ -53,7 +64,7 @@ const Materials = () => {
       </div>
 
       <div className="grid gap-4">
-        {materials?.map((subject) => (
+        {materials?.map((subject: GroupedMaterial) => (
           <Card key={subject.title} className="p-4">
             <Accordion type="single" collapsible>
               <SubjectItem subject={subject} />
