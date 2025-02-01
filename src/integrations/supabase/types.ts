@@ -36,6 +36,39 @@ export type Database = {
         }
         Relationships: []
       }
+      demo_courses: {
+        Row: {
+          course_id: string
+          course_name: string
+          created_at: string | null
+          id: string
+          notes_url: string | null
+          test_questions: Json | null
+          updated_at: string | null
+          video_url: string | null
+        }
+        Insert: {
+          course_id: string
+          course_name: string
+          created_at?: string | null
+          id?: string
+          notes_url?: string | null
+          test_questions?: Json | null
+          updated_at?: string | null
+          video_url?: string | null
+        }
+        Update: {
+          course_id?: string
+          course_name?: string
+          created_at?: string | null
+          id?: string
+          notes_url?: string | null
+          test_questions?: Json | null
+          updated_at?: string | null
+          video_url?: string | null
+        }
+        Relationships: []
+      }
       demo_requests: {
         Row: {
           course: string
