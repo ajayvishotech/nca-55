@@ -19,6 +19,7 @@ import * as z from "zod";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import DemoRegistration from "@/components/demo/DemoRegistration";
+import { User } from "@supabase/supabase-js";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -45,7 +46,16 @@ const Login = () => {
       
       // First, check if the user exists
       const { data: { users }, error: getUserError } = await supabase.auth.admin.listUsers();
-      const userExists = users?.some(user => user.email === values.email);
+      
+      if (getUserError) {
+        console.error("Error checking user:", getUserError);
+        // If we can't check if the user exists, proceed with sign in directly
+        const { data, error } = await supabase.auth.signInWithPassword(values);
+        if (error) throw error;
+        return handleSuccessfulLogin(data.user);
+      }
+
+      const userExists = users?.some((user: User) => user.email === values.email);
       
       if (!userExists) {
         // If user doesn't exist, try to sign up first
@@ -95,29 +105,7 @@ const Login = () => {
         return;
       }
 
-      if (data?.user) {
-        // Create a profile for the user if it doesn't exist
-        const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select()
-          .eq('user_id', data.user.id)
-          .single();
-
-        if (!profile && !profileError) {
-          await supabase.from('profiles').insert([
-            {
-              user_id: data.user.id,
-              full_name: data.user.email?.split('@')[0] || 'User',
-            }
-          ]);
-        }
-
-        toast({
-          title: "Login successful!",
-          description: "Welcome back to NCA PREP.",
-        });
-        navigate("/");
-      }
+      await handleSuccessfulLogin(data.user);
     } catch (error: any) {
       console.error("Unexpected error:", error);
       toast({
@@ -128,6 +116,32 @@ const Login = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleSuccessfulLogin = async (user: User | null) => {
+    if (!user) return;
+    
+    // Create a profile for the user if it doesn't exist
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select()
+      .eq('user_id', user.id)
+      .single();
+
+    if (!profile && !profileError) {
+      await supabase.from('profiles').insert([
+        {
+          user_id: user.id,
+          full_name: user.email?.split('@')[0] || 'User',
+        }
+      ]);
+    }
+
+    toast({
+      title: "Login successful!",
+      description: "Welcome back to NCA PREP.",
+    });
+    navigate("/");
   };
 
   return (
