@@ -3,120 +3,120 @@ import { MessageSquare } from "lucide-react";
 import QuestionForm from "@/components/doubts/QuestionForm";
 import DoubtCard from "@/components/doubts/DoubtCard";
 import { motion } from "framer-motion";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface Reply {
-  id: number;
-  userId: string;
-  userType: "student" | "staff";
-  userName: string;
+  id: string;
+  user_id: string;
   content: string;
-  timestamp: string;
-  likes: number;
+  created_at: string;
 }
 
 interface Doubt {
-  id: number;
+  id: string;
   subject: string;
-  question: string;
-  userId: string;
-  userName: string;
-  timestamp: string;
-  likes: number;
+  content: string;
+  user_id: string;
+  created_at: string;
   replies: Reply[];
 }
 
-const sampleDoubts: Doubt[] = [
-  {
-    id: 1,
-    subject: "Economics",
-    question: "Can someone explain the difference between micro and macroeconomics?",
-    userId: "user1",
-    userName: "Rahul S.",
-    timestamp: "2 hours ago",
-    likes: 5,
-    replies: [
-      {
-        id: 1,
-        userId: "staff1",
-        userType: "staff",
-        userName: "Prof. Kumar",
-        content: "Microeconomics focuses on individual markets and decisions, while macroeconomics looks at the economy as a whole.",
-        timestamp: "1 hour ago",
-        likes: 3,
-      },
-      {
-        id: 2,
-        userId: "user2",
-        userType: "student",
-        userName: "Priya M.",
-        content: "Thank you! That helps clarify. So would studying consumer behavior be micro or macro?",
-        timestamp: "30 mins ago",
-        likes: 1,
-      }
-    ]
-  }
-];
-
 const Doubts = () => {
-  const [doubts, setDoubts] = useState<Doubt[]>(sampleDoubts);
+  const queryClient = useQueryClient();
 
-  const handleNewQuestion = ({ subject, content }: { subject: string; content: string }) => {
-    const newDoubt: Doubt = {
-      id: doubts.length + 1,
-      subject,
-      question: content,
-      userId: "currentUser",
-      userName: "Current User",
-      timestamp: "Just now",
-      likes: 0,
-      replies: [],
-    };
+  const { data: doubts, isLoading } = useQuery({
+    queryKey: ['doubts'],
+    queryFn: async () => {
+      const { data: doubtsData, error: doubtsError } = await supabase
+        .from('doubts')
+        .select(`
+          *,
+          replies:doubt_replies(*)
+        `)
+        .order('created_at', { ascending: false });
 
-    setDoubts([newDoubt, ...doubts]);
-  };
+      if (doubtsError) throw doubtsError;
+      return doubtsData as Doubt[];
+    }
+  });
 
-  const handleLikeDoubt = (doubtId: number) => {
-    setDoubts(
-      doubts.map((doubt) =>
-        doubt.id === doubtId
-          ? { ...doubt, likes: doubt.likes + 1 }
-          : doubt
-      )
-    );
-  };
+  const createDoubtMutation = useMutation({
+    mutationFn: async ({ subject, content }: { subject: string; content: string }) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("User not authenticated");
 
-  const handleAddReply = (doubtId: number, content: string) => {
-    const newReply: Reply = {
-      id: Math.random(),
-      userId: "currentUser",
-      userType: "student",
-      userName: "Current User",
-      content,
-      timestamp: "Just now",
-      likes: 0,
-    };
-
-    setDoubts(doubts.map(doubt => 
-      doubt.id === doubtId 
-        ? { ...doubt, replies: [...doubt.replies, newReply] }
-        : doubt
-    ));
-  };
-
-  const handleLikeReply = (doubtId: number, replyId: number) => {
-    setDoubts(doubts.map(doubt =>
-      doubt.id === doubtId
-        ? {
-            ...doubt,
-            replies: doubt.replies.map(reply =>
-              reply.id === replyId
-                ? { ...reply, likes: reply.likes + 1 }
-                : reply
-            ),
+      const { data, error } = await supabase
+        .from('doubts')
+        .insert([
+          {
+            subject,
+            content,
+            user_id: user.id,
           }
-        : doubt
-    ));
+        ])
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['doubts'] });
+    }
+  });
+
+  const addReplyMutation = useMutation({
+    mutationFn: async ({ doubtId, content }: { doubtId: string; content: string }) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("User not authenticated");
+
+      const { data, error } = await supabase
+        .from('doubt_replies')
+        .insert([
+          {
+            doubt_id: doubtId,
+            content,
+            user_id: user.id,
+          }
+        ])
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['doubts'] });
+    }
+  });
+
+  const handleNewQuestion = async (questionData: { subject: string; content: string }) => {
+    try {
+      await createDoubtMutation.mutateAsync(questionData);
+    } catch (error) {
+      console.error('Error creating doubt:', error);
+    }
   };
+
+  const handleAddReply = async (doubtId: string, content: string) => {
+    try {
+      await addReplyMutation.mutateAsync({ doubtId, content });
+    } catch (error) {
+      console.error('Error adding reply:', error);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        {[1, 2, 3].map((i) => (
+          <Skeleton key={i} className="h-[200px] w-full" />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 animate-fadeIn">
@@ -138,13 +138,11 @@ const Doubts = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}
       >
-        {doubts.map((doubt) => (
+        {doubts?.map((doubt) => (
           <DoubtCard
             key={doubt.id}
             doubt={doubt}
-            onLike={handleLikeDoubt}
             onAddReply={handleAddReply}
-            onLikeReply={handleLikeReply}
           />
         ))}
       </motion.div>
