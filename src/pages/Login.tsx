@@ -42,6 +42,30 @@ const Login = () => {
   const handleLogin = async (values: z.infer<typeof loginSchema>) => {
     try {
       setIsLoading(true);
+      
+      // First, check if the user exists
+      const { data: { users }, error: getUserError } = await supabase.auth.admin.listUsers();
+      const userExists = users?.some(user => user.email === values.email);
+      
+      if (!userExists) {
+        // If user doesn't exist, try to sign up first
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+          email: values.email,
+          password: values.password,
+        });
+
+        if (signUpError) {
+          console.error("Signup error:", signUpError);
+          toast({
+            variant: "destructive",
+            title: "Sign up failed",
+            description: signUpError.message,
+          });
+          return;
+        }
+      }
+
+      // Now try to sign in
       const { data, error } = await supabase.auth.signInWithPassword({
         email: values.email,
         password: values.password,
@@ -72,6 +96,22 @@ const Login = () => {
       }
 
       if (data?.user) {
+        // Create a profile for the user if it doesn't exist
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select()
+          .eq('user_id', data.user.id)
+          .single();
+
+        if (!profile && !profileError) {
+          await supabase.from('profiles').insert([
+            {
+              user_id: data.user.id,
+              full_name: data.user.email?.split('@')[0] || 'User',
+            }
+          ]);
+        }
+
         toast({
           title: "Login successful!",
           description: "Welcome back to NCA PREP.",
