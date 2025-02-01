@@ -26,13 +26,15 @@ const loginSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
+type LoginFormValues = z.infer<typeof loginSchema>;
+
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const loginForm = useForm<z.infer<typeof loginSchema>>({
+  const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
@@ -40,7 +42,7 @@ const Login = () => {
     },
   });
 
-  const handleLogin = async (values: z.infer<typeof loginSchema>) => {
+  const handleLogin = async (values: LoginFormValues) => {
     try {
       setIsLoading(true);
       
@@ -50,7 +52,10 @@ const Login = () => {
       if (getUserError) {
         console.error("Error checking user:", getUserError);
         // If we can't check if the user exists, proceed with sign in directly
-        const { data, error } = await supabase.auth.signInWithPassword(values);
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: values.email,
+          password: values.password,
+        });
         if (error) throw error;
         return handleSuccessfulLogin(data.user);
       }
