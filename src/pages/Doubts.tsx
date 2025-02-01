@@ -18,6 +18,7 @@ interface Doubt {
   id: string;
   subject: string;
   content: string;
+  title: string;
   user_id: string;
   created_at: string;
   replies: Reply[];
@@ -43,7 +44,7 @@ const Doubts = () => {
   });
 
   const createDoubtMutation = useMutation({
-    mutationFn: async ({ subject, content }: { subject: string; content: string }) => {
+    mutationFn: async ({ subject, content, title }: { subject: string; content: string; title: string }) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("User not authenticated");
 
@@ -53,6 +54,7 @@ const Doubts = () => {
           {
             subject,
             content,
+            title,
             user_id: user.id,
           }
         ])
@@ -92,7 +94,7 @@ const Doubts = () => {
     }
   });
 
-  const handleNewQuestion = async (questionData: { subject: string; content: string }) => {
+  const handleNewQuestion = async (questionData: { subject: string; content: string; title: string }) => {
     try {
       await createDoubtMutation.mutateAsync(questionData);
     } catch (error) {
