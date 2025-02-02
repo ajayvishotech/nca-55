@@ -1,6 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Brain, Timer, Trophy, Crown, Gem, Shield } from "lucide-react";
+import { Brain, TestTube2, Newspaper } from "lucide-react";
 import { StreakDisplay } from "@/components/streak/StreakDisplay";
 import { QuizGame } from "@/components/quiz/QuizGame";
 import { StreakProvider } from "@/contexts/StreakContext";
@@ -8,25 +7,20 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
 const Index = () => {
-  const { data: studyProgress } = useQuery({
-    queryKey: ['study-progress'],
+  // Fetch counts from all relevant tables
+  const { data: counts, isLoading } = useQuery({
+    queryKey: ['dashboard-counts'],
     queryFn: async () => {
-      const { data: materials } = await supabase
-        .from('study_materials')
-        .select('*');
+      const [materials, tests, affairs] = await Promise.all([
+        supabase.from('study_materials').select('id', { count: 'exact' }),
+        supabase.from('mock_tests').select('id', { count: 'exact' }),
+        supabase.from('current_affairs').select('id', { count: 'exact' })
+      ]);
       
-      const { data: tests } = await supabase
-        .from('mock_tests')
-        .select('*');
-      
-      const { data: affairs } = await supabase
-        .from('current_affairs')
-        .select('*');
-        
       return {
-        materialsCount: materials?.length || 0,
-        testsCount: tests?.length || 0,
-        affairsCount: affairs?.length || 0
+        materialsCount: materials.count || 0,
+        testsCount: tests.count || 0,
+        affairsCount: affairs.count || 0
       };
     }
   });
@@ -54,7 +48,7 @@ const Index = () => {
               <div>
                 <h3 className="font-medium">Study Materials</h3>
                 <p className="text-sm text-muted-foreground">
-                  {studyProgress?.materialsCount || 0} materials available
+                  {isLoading ? "Loading..." : `${counts?.materialsCount || 0} materials available`}
                 </p>
               </div>
             </div>
@@ -63,12 +57,12 @@ const Index = () => {
           <Card className="p-4">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-primary/10 rounded-lg">
-                <Trophy className="h-5 w-5 text-primary" />
+                <TestTube2 className="h-5 w-5 text-primary" />
               </div>
               <div>
                 <h3 className="font-medium">Mock Tests</h3>
                 <p className="text-sm text-muted-foreground">
-                  {studyProgress?.testsCount || 0} tests available
+                  {isLoading ? "Loading..." : `${counts?.testsCount || 0} tests available`}
                 </p>
               </div>
             </div>
@@ -77,12 +71,12 @@ const Index = () => {
           <Card className="p-4">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-primary/10 rounded-lg">
-                <Timer className="h-5 w-5 text-primary" />
+                <Newspaper className="h-5 w-5 text-primary" />
               </div>
               <div>
                 <h3 className="font-medium">Current Affairs</h3>
                 <p className="text-sm text-muted-foreground">
-                  {studyProgress?.affairsCount || 0} updates available
+                  {isLoading ? "Loading..." : `${counts?.affairsCount || 0} updates available`}
                 </p>
               </div>
             </div>
