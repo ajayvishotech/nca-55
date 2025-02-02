@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -21,7 +21,7 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const queryClient = useQueryClient();
 
-  const { data: profile, isLoading } = useQuery({
+  const { data: profile, isLoading, error } = useQuery({
     queryKey: ['profile'],
     queryFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -31,9 +31,25 @@ const Profile = () => {
         .from('profiles')
         .select('*')
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
+      if (!data) {
+        // Create a new profile if none exists
+        const { data: newProfile, error: createError } = await supabase
+          .from('profiles')
+          .insert([
+            {
+              user_id: user.id,
+              full_name: user.email?.split('@')[0] || 'User',
+            }
+          ])
+          .select()
+          .single();
+
+        if (createError) throw createError;
+        return newProfile as Profile;
+      }
       return data as Profile;
     }
   });
@@ -86,6 +102,14 @@ const Profile = () => {
       <div className="space-y-6 p-4 md:p-6 max-w-4xl mx-auto">
         <Skeleton className="h-8 w-48" />
         <Skeleton className="h-[400px] w-full" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6 p-4 md:p-6 max-w-4xl mx-auto">
+        <div className="text-red-500">Error loading profile. Please try again later.</div>
       </div>
     );
   }

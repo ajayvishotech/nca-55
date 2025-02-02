@@ -46,67 +46,47 @@ const Login = () => {
     try {
       setIsLoading(true);
       
-      // First, check if the user exists
-      const { data: { users }, error: getUserError } = await supabase.auth.admin.listUsers();
-      
-      if (getUserError) {
-        console.error("Error checking user:", getUserError);
-        // If we can't check if the user exists, proceed with sign in directly
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email: values.email,
-          password: values.password,
-        });
-        if (error) throw error;
-        return handleSuccessfulLogin(data.user);
-      }
-
-      const userExists = users?.some((user: User) => user.email === values.email);
-      
-      if (!userExists) {
-        // If user doesn't exist, try to sign up first
-        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-          email: values.email,
-          password: values.password,
-        });
-
-        if (signUpError) {
-          console.error("Signup error:", signUpError);
-          toast({
-            variant: "destructive",
-            title: "Sign up failed",
-            description: signUpError.message,
-          });
-          return;
-        }
-      }
-
-      // Now try to sign in
+      // Try to sign in first
       const { data, error } = await supabase.auth.signInWithPassword({
         email: values.email,
         password: values.password,
       });
 
       if (error) {
-        console.error("Login error:", error);
+        // If login fails with invalid credentials, try to sign up
         if (error.message === "Invalid login credentials") {
-          toast({
-            variant: "destructive",
-            title: "Login failed",
-            description: "Invalid email or password. Please try again.",
+          const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+            email: values.email,
+            password: values.password,
           });
-        } else if (error.message.includes("Email not confirmed")) {
-          toast({
-            variant: "destructive",
-            title: "Email not verified",
-            description: "Please check your email and verify your account before logging in.",
-          });
-        } else {
-          toast({
-            variant: "destructive",
-            title: "Login failed",
-            description: error.message,
-          });
+
+          if (signUpError) {
+            console.error("Signup error:", signUpError);
+            toast({
+              variant: "destructive",
+              title: "Sign up failed",
+              description: signUpError.message,
+            });
+            return;
+          }
+
+          if (signUpData.session === null) {
+            toast({
+              title: "Verification email sent",
+              description: "Please check your email to verify your account before logging in.",
+            });
+            return;
+          }
+
+          return handleSuccessfulLogin(signUpData.user);
         }
+
+        console.error("Login error:", error);
+        toast({
+          variant: "destructive",
+          title: "Login failed",
+          description: error.message,
+        });
         return;
       }
 
@@ -126,20 +106,26 @@ const Login = () => {
   const handleSuccessfulLogin = async (user: User | null) => {
     if (!user) return;
     
-    // Create a profile for the user if it doesn't exist
+    // Check if profile exists and create if it doesn't
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select()
       .eq('user_id', user.id)
-      .single();
+      .maybeSingle();
 
     if (!profile && !profileError) {
-      await supabase.from('profiles').insert([
-        {
-          user_id: user.id,
-          full_name: user.email?.split('@')[0] || 'User',
-        }
-      ]);
+      const { error: insertError } = await supabase
+        .from('profiles')
+        .insert([
+          {
+            user_id: user.id,
+            full_name: user.email?.split('@')[0] || 'User',
+          }
+        ]);
+
+      if (insertError) {
+        console.error('Error creating profile:', insertError);
+      }
     }
 
     toast({
