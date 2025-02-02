@@ -1,53 +1,58 @@
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Newspaper, Download, Clock } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { format } from "date-fns";
+import { Newspaper } from "lucide-react";
 
 const CurrentAffairs = () => {
-  const { toast } = useToast();
+  const { data: affairs, isLoading } = useQuery({
+    queryKey: ['current-affairs'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('current_affairs')
+        .select('*')
+        .order('date', { ascending: false });
+      
+      if (error) throw error;
+      return data;
+    }
+  });
 
-  const handleDownload = () => {
-    toast({
-      title: "Download Started",
-      description: "Today's newspaper is being downloaded.",
-    });
-  };
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        {[1, 2, 3].map((i) => (
+          <Skeleton key={i} className="h-32 w-full" />
+        ))}
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6 animate-fadeIn">
-      <div className="flex flex-col gap-4">
-        <h1 className="font-heading text-2xl font-bold">Current Affairs</h1>
-        <p className="text-muted-foreground">Stay updated with the latest news</p>
+    <div className="space-y-6">
+      <div className="flex items-center gap-3">
+        <Newspaper className="h-8 w-8 text-primary" />
+        <div>
+          <h1 className="font-heading text-2xl font-bold">Current Affairs</h1>
+          <p className="text-muted-foreground">Stay updated with the latest news and events</p>
+        </div>
       </div>
 
-      <Button 
-        onClick={handleDownload}
-        className="w-full md:w-auto mb-4 bg-accent hover:bg-accent/90"
-      >
-        <Newspaper className="h-5 w-5 mr-2" />
-        Today's Newspaper
-      </Button>
-
       <div className="grid gap-4">
-        {[1, 2, 3].map((i) => (
-          <Card key={i} className="p-6 cursor-pointer hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="rounded-full bg-primary/10 p-3">
-                  <Newspaper className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <p className="font-medium">Daily Update {i}</p>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Clock className="h-4 w-4" />
-                    <span>2 hours ago</span>
-                  </div>
-                </div>
+        {affairs?.map((affair) => (
+          <Card key={affair.id}>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle>{affair.title}</CardTitle>
+                <span className="text-sm text-muted-foreground">
+                  {format(new Date(affair.date), 'PPP')}
+                </span>
               </div>
-              <Button variant="ghost" size="sm">
-                <Download className="h-4 w-4" />
-              </Button>
-            </div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">{affair.content}</p>
+            </CardContent>
           </Card>
         ))}
       </div>
