@@ -26,7 +26,7 @@ const Materials = () => {
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      
+
       // Group materials by subject
       const groupedMaterials = (data as StudyMaterial[]).reduce<Record<string, GroupedMaterial>>((acc, material) => {
         if (!acc[material.subject]) {
@@ -38,7 +38,7 @@ const Materials = () => {
         
         acc[material.subject].items.push({
           name: material.title,
-          chapters: Math.floor(Math.random() * 10) + 1, // This should come from backend in future
+          chapters: 12 // This would ideally come from the database
         });
         
         return acc;
@@ -56,6 +56,21 @@ const Materials = () => {
     );
   }
 
+  // If no materials are found
+  if (!materials || materials.length === 0) {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col gap-4">
+          <h1 className="font-heading text-2xl font-bold">Study Materials</h1>
+          <p className="text-muted-foreground">Access your course materials</p>
+        </div>
+        <Card className="p-6 text-center text-muted-foreground">
+          No study materials available at the moment.
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 animate-fadeIn">
       <div className="flex flex-col gap-4">
@@ -64,7 +79,7 @@ const Materials = () => {
       </div>
 
       <div className="grid gap-4">
-        {materials?.map((subject: GroupedMaterial) => (
+        {materials.map((subject) => (
           <Card key={subject.title} className="p-4">
             <Accordion type="single" collapsible>
               <SubjectItem subject={subject} />
