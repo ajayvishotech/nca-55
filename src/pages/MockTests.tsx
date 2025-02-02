@@ -5,25 +5,44 @@ import { motion } from "framer-motion";
 import { TestTube, Timer, AlertCircle, Trophy, Brain, Target, Sparkles } from "lucide-react";
 import { QuizGame } from "@/components/quiz/QuizGame";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { Skeleton } from "@/components/ui/skeleton";
 
 const MockTests = () => {
-  const [selectedTest, setSelectedTest] = useState<string | null>(null);
+  const [selectedTest, setSelectedTest] = useState<number | null>(null);
 
-  const { data: tests, isLoading } = useQuery({
-    queryKey: ['mock-tests'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('mock_tests')
-        .select('*')
-        .order('created_at', { ascending: false });
-      
-      if (error) throw error;
-      return data;
-    }
-  });
+  const tests = [
+    {
+      id: 1,
+      title: "General Knowledge",
+      duration: "2 hours",
+      questions: 100,
+      difficulty: "Medium",
+      points: 200,
+    },
+    {
+      id: 2,
+      title: "Current Affairs",
+      duration: "1.5 hours",
+      questions: 75,
+      difficulty: "Hard",
+      points: 150,
+    },
+    {
+      id: 3,
+      title: "Aptitude Test",
+      duration: "1 hour",
+      questions: 50,
+      difficulty: "Easy",
+      points: 100,
+    },
+    {
+      id: 4,
+      title: "Subject Expertise",
+      duration: "2.5 hours",
+      questions: 125,
+      difficulty: "Expert",
+      points: 250,
+    },
+  ];
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -62,16 +81,6 @@ const MockTests = () => {
       text: "Detailed performance analysis after completion",
     },
   ];
-
-  if (isLoading) {
-    return (
-      <div className="space-y-4">
-        {[1, 2, 3].map((i) => (
-          <Skeleton key={i} className="h-32 w-full" />
-        ))}
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6 animate-fadeIn">
@@ -121,7 +130,7 @@ const MockTests = () => {
         initial="hidden"
         animate="show"
       >
-        {tests?.map((test) => (
+        {tests.map((test) => (
           <motion.div key={test.id} variants={itemVariants}>
             <Card className="group overflow-hidden">
               <motion.div 
@@ -138,18 +147,16 @@ const MockTests = () => {
                     <div className="flex flex-wrap gap-2 mt-2">
                       <div className="flex items-center gap-1 text-sm text-muted-foreground">
                         <Timer className="h-4 w-4" />
-                        <span>{test.duration} minutes</span>
+                        <span>{test.duration}</span>
                       </div>
                       <div className="flex items-center gap-1 text-sm text-muted-foreground">
                         <Target className="h-4 w-4" />
-                        <span>{test.total_marks} Marks</span>
+                        <span>{test.questions} Questions</span>
                       </div>
-                      {test.description && (
-                        <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                          <Trophy className="h-4 w-4" />
-                          <span>{test.description}</span>
-                        </div>
-                      )}
+                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                        <Trophy className="h-4 w-4" />
+                        <span>{test.points} Points</span>
+                      </div>
                     </div>
                   </div>
                   <Button 
