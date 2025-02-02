@@ -1,11 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
-import { Loader2, Calendar } from "lucide-react";
+import { Loader2, Calendar, ArrowRight } from "lucide-react";
 import { format } from "date-fns";
-import { Database } from "@/integrations/supabase/types";
-
-type CurrentAffair = Database['public']['Tables']['current_affairs']['Row'];
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 
 const CurrentAffairs = () => {
   const { data: affairs, isLoading } = useQuery({
@@ -17,7 +16,7 @@ const CurrentAffairs = () => {
         .order('date', { ascending: false });
       
       if (error) throw error;
-      return data as CurrentAffair[];
+      return data;
     }
   });
 
@@ -38,18 +37,28 @@ const CurrentAffairs = () => {
 
       <div className="grid gap-4">
         {affairs?.map((affair) => (
-          <Card key={affair.id} className="p-6 hover:shadow-md transition-shadow">
-            <div className="flex items-start justify-between gap-4">
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold">{affair.title}</h3>
-                <p className="text-muted-foreground">{affair.content}</p>
+          <motion.div
+            key={affair.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Card className="p-6 hover:shadow-md transition-shadow">
+              <div className="flex items-start justify-between gap-4">
+                <div className="space-y-2">
+                  <h3 className="font-heading text-lg font-semibold">{affair.title}</h3>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Calendar className="h-4 w-4" />
+                    <span>{format(new Date(affair.date), 'PPP')}</span>
+                  </div>
+                  <p className="text-muted-foreground line-clamp-2">{affair.content}</p>
+                </div>
+                <Button variant="ghost" size="icon">
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
               </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Calendar className="h-4 w-4" />
-                <span>{format(new Date(affair.date), 'PPP')}</span>
-              </div>
-            </div>
-          </Card>
+            </Card>
+          </motion.div>
         ))}
       </div>
     </div>

@@ -7,9 +7,6 @@ import { QuizGame } from "@/components/quiz/QuizGame";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Database } from "@/integrations/supabase/types";
-
-type MockTest = Database['public']['Tables']['mock_tests']['Row'];
 
 const MockTests = () => {
   const [selectedTest, setSelectedTest] = useState<string | null>(null);
@@ -23,9 +20,55 @@ const MockTests = () => {
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      return data as MockTest[];
+      
+      return data.map(test => ({
+        id: test.id,
+        title: test.title,
+        duration: `${test.duration} minutes`,
+        questions: Math.floor(test.total_marks / 2), // Assuming 2 marks per question
+        difficulty: test.total_marks > 100 ? "Hard" : test.total_marks > 50 ? "Medium" : "Easy",
+        points: test.total_marks,
+      }));
     }
   });
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0 }
+  };
+
+  const instructionItems = [
+    { 
+      id: 1, 
+      icon: <Timer className="h-5 w-5 text-blue-500" />, 
+      text: "Time-bound tests to simulate exam conditions",
+    },
+    { 
+      id: 2, 
+      icon: <Target className="h-5 w-5 text-purple-500" />, 
+      text: "Multiple choice questions with instant feedback",
+    },
+    { 
+      id: 3, 
+      icon: <Trophy className="h-5 w-5 text-yellow-500" />, 
+      text: "Earn points and track your progress",
+    },
+    { 
+      id: 4, 
+      icon: <Sparkles className="h-5 w-5 text-emerald-500" />, 
+      text: "Detailed performance analysis after completion",
+    },
+  ];
 
   if (isLoading) {
     return (
@@ -59,36 +102,32 @@ const MockTests = () => {
         <AlertDescription className="mt-2">
           <motion.ul 
             className="list-none space-y-3"
+            variants={containerVariants}
             initial="hidden"
             animate="show"
           >
-            <motion.li className="flex items-center gap-3 text-gray-800 dark:text-gray-200">
-              <Timer className="h-5 w-5 text-blue-500" />
-              <span className="font-medium">Time-bound tests to simulate exam conditions</span>
-            </motion.li>
-            <motion.li className="flex items-center gap-3 text-gray-800 dark:text-gray-200">
-              <Target className="h-5 w-5 text-purple-500" />
-              <span className="font-medium">Multiple choice questions with instant feedback</span>
-            </motion.li>
-            <motion.li className="flex items-center gap-3 text-gray-800 dark:text-gray-200">
-              <Trophy className="h-5 w-5 text-yellow-500" />
-              <span className="font-medium">Earn points and track your progress</span>
-            </motion.li>
-            <motion.li className="flex items-center gap-3 text-gray-800 dark:text-gray-200">
-              <Sparkles className="h-5 w-5 text-emerald-500" />
-              <span className="font-medium">Detailed performance analysis after completion</span>
-            </motion.li>
+            {instructionItems.map((item) => (
+              <motion.li 
+                key={item.id}
+                className="flex items-center gap-3 text-gray-800 dark:text-gray-200"
+                variants={itemVariants}
+              >
+                {item.icon}
+                <span className="font-medium">{item.text}</span>
+              </motion.li>
+            ))}
           </motion.ul>
         </AlertDescription>
       </Alert>
 
       <motion.div 
         className="grid gap-4 md:grid-cols-2"
+        variants={containerVariants}
         initial="hidden"
         animate="show"
       >
         {tests?.map((test) => (
-          <motion.div key={test.id}>
+          <motion.div key={test.id} variants={itemVariants}>
             <Card className="group overflow-hidden">
               <motion.div 
                 className="p-6 bg-gradient-to-br from-background to-accent/5 hover:to-accent/10 transition-all duration-300"
@@ -104,11 +143,15 @@ const MockTests = () => {
                     <div className="flex flex-wrap gap-2 mt-2">
                       <div className="flex items-center gap-1 text-sm text-muted-foreground">
                         <Timer className="h-4 w-4" />
-                        <span>{test.duration} minutes</span>
+                        <span>{test.duration}</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                        <Target className="h-4 w-4" />
+                        <span>{test.questions} Questions</span>
                       </div>
                       <div className="flex items-center gap-1 text-sm text-muted-foreground">
                         <Trophy className="h-4 w-4" />
-                        <span>{test.total_marks} Points</span>
+                        <span>{test.points} Points</span>
                       </div>
                     </div>
                   </div>
