@@ -197,56 +197,9 @@ export const Header = () => {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center">
         <Link to="/" className="flex items-center gap-2 group">
-          <div className="w-12 h-12 relative animate-float">
-            <svg className="w-full h-full" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path 
-                d="M10 35C10 32 12 30 15 30H35C38 30 40 32 40 35V45C40 42 38 40 35 40H15C12 40 10 42 10 45V35Z" 
-                fill="url(#bookGrad)"
-                className="animate-pulse"
-              />
-              <path 
-                d="M25 15L40 30H10L25 15Z" 
-                fill="url(#pageGrad)"
-                className="animate-pulse"
-              />
-              <path 
-                d="M23 18L27 14V24L25 26L23 24V18Z" 
-                fill="url(#penGrad)"
-                className="animate-pulse"
-              />
-              <path 
-                d="M20 10H30L25 5L20 10Z" 
-                fill="url(#capGrad)"
-                className="animate-float"
-              />
-              <defs>
-                <linearGradient id="bookGrad" x1="10" y1="30" x2="40" y2="45" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stopColor="#0EA5E9"/>
-                  <stop offset="100%" stopColor="#1EAEDB"/>
-                </linearGradient>
-                <linearGradient id="pageGrad" x1="10" y1="15" x2="40" y2="30" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stopColor="#33C3F0"/>
-                  <stop offset="100%" stopColor="#0EA5E9"/>
-                </linearGradient>
-                <linearGradient id="penGrad" x1="23" y1="14" x2="27" y2="26" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stopColor="#33C3F0"/>
-                  <stop offset="100%" stopColor="#0EA5E9"/>
-                </linearGradient>
-                <linearGradient id="capGrad" x1="20" y1="5" x2="30" y2="10" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stopColor="#33C3F0"/>
-                  <stop offset="100%" stopColor="#0EA5E9"/>
-                </linearGradient>
-              </defs>
-            </svg>
-          </div>
-          <div className="flex flex-col items-start">
-            <span className="font-heading text-lg md:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent transition-colors">
-              Nanjil Edge
-            </span>
-            <span className="text-xs text-muted-foreground hidden md:block">
-              Empowering Future Leaders
-            </span>
-          </div>
+          <span className="font-heading text-lg md:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent transition-colors">
+            Nanjil Edge
+          </span>
         </Link>
 
         <div className="ml-2 md:ml-4 flex-1">

@@ -1,3 +1,4 @@
+
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Brain, Timer, Trophy, Crown, Gem, Shield } from "lucide-react";
@@ -12,7 +13,7 @@ const Index = () => {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4">
           <div>
             <h1 className="text-base md:text-2xl font-bold font-heading">
-              Welcome to your Milestone!
+              Nanjil Edge
             </h1>
           </div>
         </div>
