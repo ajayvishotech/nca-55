@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -201,32 +202,65 @@ export const Header = () => {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center">
         <Link to="/" className="flex items-center gap-2 group">
-          <div className="w-10 h-10 relative animate-float">
+          <div className="w-12 h-12 relative animate-float">
             <svg className="w-full h-full" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-              {/* Graduation Cap */}
-              <path d="M25 10L45 20L25 30L5 20L25 10Z" fill="url(#grad1)" className="animate-float"/>
-              <path d="M15 22V32L25 37L35 32V22" stroke="url(#grad1)" strokeWidth="2" fill="none"/>
+              {/* Open Book Base */}
+              <path 
+                d="M10 30C10 27 12 25 15 25H35C38 25 40 27 40 30V40C40 37 38 35 35 35H15C12 35 10 37 10 40V30Z" 
+                fill="url(#bookGrad)"
+                className="animate-pulse"
+              />
               
-              {/* Book */}
-              <path d="M20 15H30C32 15 35 16 35 20V35C35 31 32 30 30 30H20C18 30 15 31 15 35V20C15 16 18 15 20 15Z" fill="url(#grad2)"/>
+              {/* Book Pages */}
+              <path 
+                d="M15 25H25V35H15C12 35 10 37 10 40V30C10 27 12 25 15 25Z" 
+                fill="url(#pageGrad)"
+                className="animate-pulse"
+              />
               
               {/* Pen Nib */}
-              <path d="M23 25L27 21L29 23L25 27L23 25Z" fill="url(#grad3)"/>
-              <path d="M22 28L24 26L25 27L23 29L22 28Z" fill="url(#grad3)"/>
+              <path 
+                d="M22 28L28 22L30 24L24 30L22 28Z" 
+                fill="url(#penGrad)"
+                className="animate-pulse"
+              />
+              <path 
+                d="M21 31L23 29L24 30L22 32L21 31Z" 
+                fill="url(#penGrad)"
+                className="animate-pulse"
+              />
+              
+              {/* Graduation Cap */}
+              <path 
+                d="M25 15L40 22L25 29L10 22L25 15Z" 
+                fill="url(#capGrad)"
+                className="animate-float"
+              />
+              <path 
+                d="M18 23V30L25 33L32 30V23" 
+                stroke="url(#capGrad)" 
+                strokeWidth="2" 
+                fill="none"
+                className="animate-pulse"
+              />
               
               {/* Gradients */}
               <defs>
-                <linearGradient id="grad1" x1="5" y1="10" x2="45" y2="30" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stopColor="#9b87f5"/>
-                  <stop offset="100%" stopColor="#7E69AB"/>
+                <linearGradient id="bookGrad" x1="10" y1="25" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stopColor="#33C3F0"/>
+                  <stop offset="100%" stopColor="#1EAEDB"/>
                 </linearGradient>
-                <linearGradient id="grad2" x1="15" y1="15" x2="35" y2="35" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stopColor="#6E59A5"/>
+                <linearGradient id="pageGrad" x1="10" y1="25" x2="25" y2="35" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stopColor="#D3E4FD"/>
                   <stop offset="100%" stopColor="#9b87f5"/>
                 </linearGradient>
-                <linearGradient id="grad3" x1="22" y1="21" x2="29" y2="29" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stopColor="#7E69AB"/>
-                  <stop offset="100%" stopColor="#6E59A5"/>
+                <linearGradient id="penGrad" x1="21" y1="22" x2="30" y2="32" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stopColor="#0EA5E9"/>
+                  <stop offset="100%" stopColor="#1EAEDB"/>
+                </linearGradient>
+                <linearGradient id="capGrad" x1="10" y1="15" x2="40" y2="33" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stopColor="#9b87f5"/>
+                  <stop offset="100%" stopColor="#7E69AB"/>
                 </linearGradient>
               </defs>
             </svg>
