@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -82,7 +81,6 @@ export const Header = () => {
     { icon: Home, label: "Dashboard", href: "/dashboard" },
   ];
 
-  // Function to handle course enrollment
   const handleEnrollCourse = (courseName: string) => {
     if (!enrolledCourses.includes(courseName)) {
       setEnrolledCourses([...enrolledCourses, courseName]);
@@ -90,7 +88,6 @@ export const Header = () => {
   };
 
   const handleLogout = () => {
-    // Add your logout logic here
     toast({
       title: "Logged out successfully",
       description: "See you soon!",
@@ -98,13 +95,11 @@ export const Header = () => {
     navigate("/login");
   };
 
-  // Function to handle course switching
   const handleSwitchCourse = (courseName: string) => {
     toast({
       title: "Course Switched",
       description: `Switched to ${courseName}`,
     });
-    // Additional logic for course switching can be added here
   };
 
   const MobileMenu = () => (
@@ -204,63 +199,42 @@ export const Header = () => {
         <Link to="/" className="flex items-center gap-2 group">
           <div className="w-12 h-12 relative animate-float">
             <svg className="w-full h-full" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-              {/* Open Book Base */}
               <path 
-                d="M10 30C10 27 12 25 15 25H35C38 25 40 27 40 30V40C40 37 38 35 35 35H15C12 35 10 37 10 40V30Z" 
+                d="M10 35C10 32 12 30 15 30H35C38 30 40 32 40 35V45C40 42 38 40 35 40H15C12 40 10 42 10 45V35Z" 
                 fill="url(#bookGrad)"
                 className="animate-pulse"
               />
-              
-              {/* Book Pages */}
               <path 
-                d="M15 25H25V35H15C12 35 10 37 10 40V30C10 27 12 25 15 25Z" 
+                d="M25 15L40 30H10L25 15Z" 
                 fill="url(#pageGrad)"
                 className="animate-pulse"
               />
-              
-              {/* Pen Nib */}
               <path 
-                d="M22 28L28 22L30 24L24 30L22 28Z" 
+                d="M23 18L27 14V24L25 26L23 24V18Z" 
                 fill="url(#penGrad)"
                 className="animate-pulse"
               />
               <path 
-                d="M21 31L23 29L24 30L22 32L21 31Z" 
-                fill="url(#penGrad)"
-                className="animate-pulse"
-              />
-              
-              {/* Graduation Cap */}
-              <path 
-                d="M25 15L40 22L25 29L10 22L25 15Z" 
+                d="M20 10H30L25 5L20 10Z" 
                 fill="url(#capGrad)"
                 className="animate-float"
               />
-              <path 
-                d="M18 23V30L25 33L32 30V23" 
-                stroke="url(#capGrad)" 
-                strokeWidth="2" 
-                fill="none"
-                className="animate-pulse"
-              />
-              
-              {/* Gradients */}
               <defs>
-                <linearGradient id="bookGrad" x1="10" y1="25" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stopColor="#33C3F0"/>
-                  <stop offset="100%" stopColor="#1EAEDB"/>
-                </linearGradient>
-                <linearGradient id="pageGrad" x1="10" y1="25" x2="25" y2="35" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stopColor="#D3E4FD"/>
-                  <stop offset="100%" stopColor="#9b87f5"/>
-                </linearGradient>
-                <linearGradient id="penGrad" x1="21" y1="22" x2="30" y2="32" gradientUnits="userSpaceOnUse">
+                <linearGradient id="bookGrad" x1="10" y1="30" x2="40" y2="45" gradientUnits="userSpaceOnUse">
                   <stop offset="0%" stopColor="#0EA5E9"/>
                   <stop offset="100%" stopColor="#1EAEDB"/>
                 </linearGradient>
-                <linearGradient id="capGrad" x1="10" y1="15" x2="40" y2="33" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stopColor="#9b87f5"/>
-                  <stop offset="100%" stopColor="#7E69AB"/>
+                <linearGradient id="pageGrad" x1="10" y1="15" x2="40" y2="30" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stopColor="#33C3F0"/>
+                  <stop offset="100%" stopColor="#0EA5E9"/>
+                </linearGradient>
+                <linearGradient id="penGrad" x1="23" y1="14" x2="27" y2="26" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stopColor="#33C3F0"/>
+                  <stop offset="100%" stopColor="#0EA5E9"/>
+                </linearGradient>
+                <linearGradient id="capGrad" x1="20" y1="5" x2="30" y2="10" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stopColor="#33C3F0"/>
+                  <stop offset="100%" stopColor="#0EA5E9"/>
                 </linearGradient>
               </defs>
             </svg>
