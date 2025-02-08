@@ -10,20 +10,20 @@ const navigation = [
     name: "Study Materials", 
     href: "/materials", 
     icon: BookOpen,
-    color: "text-primary hover:text-primary/80"
+    color: "text-[#9b87f5] hover:text-[#9b87f5]/80"
   },
   { 
     name: "Current Affairs", 
     href: "/current-affairs", 
     icon: Newspaper,
-    color: "text-secondary hover:text-secondary/80"
+    color: "text-[#7E69AB] hover:text-[#7E69AB]/80"
   },
   { name: "Mock Tests", href: "/mock-tests", icon: TestTube2 },
   { 
     name: "Doubts & Solutions", 
     href: "/doubts", 
     icon: MessageSquare,
-    color: "text-accent hover:text-accent/80"
+    color: "text-[#6E59A5] hover:text-[#6E59A5]/80"
   },
 ];
 
