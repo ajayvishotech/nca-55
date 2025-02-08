@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { MessageSquare } from "lucide-react";
 import QuestionForm from "@/components/doubts/QuestionForm";
@@ -125,10 +124,10 @@ const Doubts = () => {
     <div className="space-y-6 animate-fadeIn">
       <div className="flex flex-col gap-4">
         <h1 className="font-heading text-2xl font-bold text-gray-800 dark:text-gray-200">
-          <MessageSquare className="inline-block mr-2 text-[#6E59A5]" />
+          <MessageSquare className="inline-block mr-2 text-primary" />
           Doubts & Solutions
         </h1>
-        <p className="text-[#6E59A5]">
+        <p className="text-gray-600 dark:text-gray-400">
           Get help with your questions from our expert educators and fellow students
         </p>
       </div>

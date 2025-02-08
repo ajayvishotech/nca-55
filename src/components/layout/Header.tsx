@@ -28,7 +28,7 @@ import { useToast } from "@/hooks/use-toast";
 
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [enrolledCourses, setEnrolledCourses] = useState(['UPSC']);
+  const [enrolledCourses, setEnrolledCourses] = useState(['Demo-UPSC-CSE']);
   const isMobile = useIsMobile();
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
@@ -40,8 +40,20 @@ export const Header = () => {
       name: "Competitive Exams",
       icon: GraduationCap,
       subcategories: [
-        { id: 'upsc', name: 'UPSC', modes: ['Full Time', 'Part Time'] },
+        { id: 'upsc', name: 'UPSC-CSE', modes: ['Full Time', 'Part Time'] },
         { id: 'ssc', name: 'SSC', modes: ['Full Time', 'Part Time'] },
+        { id: 'rrb', name: 'RRB', modes: ['Full Time', 'Part Time'] },
+        { id: 'tnpsc', name: 'TNPSC', modes: ['Full Time', 'Part Time'] },
+      ]
+    },
+    { 
+      id: 2, 
+      name: "Banking",
+      icon: Landmark,
+      subcategories: [
+        { id: 'ibps', name: 'IBPS', modes: ['Full Time', 'Part Time'] },
+        { id: 'sbi', name: 'SBI', modes: ['Full Time', 'Part Time'] },
+        { id: 'rbi', name: 'RBI', modes: ['Full Time', 'Part Time'] },
       ]
     },
     { 
@@ -50,7 +62,17 @@ export const Header = () => {
       icon: School,
       subcategories: [
         { id: 'neet', name: 'NEET', modes: ['Full Time', 'Part Time'] },
-        { id: 'jee', name: 'JEE', modes: ['Full Time', 'Part Time'] },
+        { id: 'jee', name: 'JEE Main & Advanced', modes: ['Full Time', 'Part Time'] },
+        { id: 'kvpy', name: 'KVPY', modes: ['Full Time', 'Part Time'] },
+      ]
+    },
+    { 
+      id: 4, 
+      name: "Teaching",
+      icon: BookOpenCheck,
+      subcategories: [
+        { id: 'tet', name: 'TET', modes: ['Full Time', 'Part Time'] },
+        { id: 'net', name: 'NET/SET', modes: ['Full Time', 'Part Time'] },
       ]
     },
   ];
