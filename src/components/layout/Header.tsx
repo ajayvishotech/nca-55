@@ -1,7 +1,7 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,7 +28,7 @@ import { useToast } from "@/hooks/use-toast";
 
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [enrolledCourses, setEnrolledCourses] = useState(['Demo-UPSC-CSE']);
+  const [enrolledCourses, setEnrolledCourses] = useState(['UPSC']);
   const isMobile = useIsMobile();
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
@@ -40,20 +40,8 @@ export const Header = () => {
       name: "Competitive Exams",
       icon: GraduationCap,
       subcategories: [
-        { id: 'upsc', name: 'UPSC-CSE', modes: ['Full Time', 'Part Time'] },
+        { id: 'upsc', name: 'UPSC', modes: ['Full Time', 'Part Time'] },
         { id: 'ssc', name: 'SSC', modes: ['Full Time', 'Part Time'] },
-        { id: 'rrb', name: 'RRB', modes: ['Full Time', 'Part Time'] },
-        { id: 'tnpsc', name: 'TNPSC', modes: ['Full Time', 'Part Time'] },
-      ]
-    },
-    { 
-      id: 2, 
-      name: "Banking",
-      icon: Landmark,
-      subcategories: [
-        { id: 'ibps', name: 'IBPS', modes: ['Full Time', 'Part Time'] },
-        { id: 'sbi', name: 'SBI', modes: ['Full Time', 'Part Time'] },
-        { id: 'rbi', name: 'RBI', modes: ['Full Time', 'Part Time'] },
       ]
     },
     { 
@@ -62,17 +50,7 @@ export const Header = () => {
       icon: School,
       subcategories: [
         { id: 'neet', name: 'NEET', modes: ['Full Time', 'Part Time'] },
-        { id: 'jee', name: 'JEE Main & Advanced', modes: ['Full Time', 'Part Time'] },
-        { id: 'kvpy', name: 'KVPY', modes: ['Full Time', 'Part Time'] },
-      ]
-    },
-    { 
-      id: 4, 
-      name: "Teaching",
-      icon: BookOpenCheck,
-      subcategories: [
-        { id: 'tet', name: 'TET', modes: ['Full Time', 'Part Time'] },
-        { id: 'net', name: 'NET/SET', modes: ['Full Time', 'Part Time'] },
+        { id: 'jee', name: 'JEE', modes: ['Full Time', 'Part Time'] },
       ]
     },
   ];
@@ -81,7 +59,6 @@ export const Header = () => {
     { icon: Home, label: "Dashboard", href: "/dashboard" },
   ];
 
-  // Function to handle course enrollment
   const handleEnrollCourse = (courseName: string) => {
     if (!enrolledCourses.includes(courseName)) {
       setEnrolledCourses([...enrolledCourses, courseName]);
@@ -89,7 +66,6 @@ export const Header = () => {
   };
 
   const handleLogout = () => {
-    // Add your logout logic here
     toast({
       title: "Logged out successfully",
       description: "See you soon!",
@@ -97,13 +73,11 @@ export const Header = () => {
     navigate("/login");
   };
 
-  // Function to handle course switching
   const handleSwitchCourse = (courseName: string) => {
     toast({
       title: "Course Switched",
       description: `Switched to ${courseName}`,
     });
-    // Additional logic for course switching can be added here
   };
 
   const MobileMenu = () => (
@@ -201,44 +175,9 @@ export const Header = () => {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center">
         <Link to="/" className="flex items-center gap-2 group">
-          <div className="w-10 h-10 relative animate-float">
-            <svg className="w-full h-full" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-              {/* Graduation Cap */}
-              <path d="M25 10L45 20L25 30L5 20L25 10Z" fill="url(#grad1)" className="animate-float"/>
-              <path d="M15 22V32L25 37L35 32V22" stroke="url(#grad1)" strokeWidth="2" fill="none"/>
-              
-              {/* Book */}
-              <path d="M20 15H30C32 15 35 16 35 20V35C35 31 32 30 30 30H20C18 30 15 31 15 35V20C15 16 18 15 20 15Z" fill="url(#grad2)"/>
-              
-              {/* Pen Nib */}
-              <path d="M23 25L27 21L29 23L25 27L23 25Z" fill="url(#grad3)"/>
-              <path d="M22 28L24 26L25 27L23 29L22 28Z" fill="url(#grad3)"/>
-              
-              {/* Gradients */}
-              <defs>
-                <linearGradient id="grad1" x1="5" y1="10" x2="45" y2="30" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stopColor="#9b87f5"/>
-                  <stop offset="100%" stopColor="#7E69AB"/>
-                </linearGradient>
-                <linearGradient id="grad2" x1="15" y1="15" x2="35" y2="35" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stopColor="#6E59A5"/>
-                  <stop offset="100%" stopColor="#9b87f5"/>
-                </linearGradient>
-                <linearGradient id="grad3" x1="22" y1="21" x2="29" y2="29" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stopColor="#7E69AB"/>
-                  <stop offset="100%" stopColor="#6E59A5"/>
-                </linearGradient>
-              </defs>
-            </svg>
-          </div>
-          <div className="flex flex-col items-start">
-            <span className="font-heading text-lg md:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent transition-colors">
-              Nanjil Edge
-            </span>
-            <span className="text-xs text-muted-foreground hidden md:block">
-              Empowering Future Leaders
-            </span>
-          </div>
+          <span className="font-heading text-lg md:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent transition-colors">
+            Nanjil Edge
+          </span>
         </Link>
 
         <div className="ml-2 md:ml-4 flex-1">
