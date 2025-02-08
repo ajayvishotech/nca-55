@@ -130,7 +130,7 @@ const Login = () => {
 
     toast({
       title: "Login successful!",
-      description: "Welcome back to Nanjil Edge.",
+      description: "Welcome back to NCA PREP.",
     });
     navigate("/");
   };
@@ -139,7 +139,7 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-50/40 p-4">
       <Card className="w-full max-w-md p-8 space-y-8 animate-fadeIn">
         <div className="text-center space-y-2">
-          <h1 className="font-heading text-3xl font-bold text-primary">Welcome to Nanjil Edge!</h1>
+          <h1 className="font-heading text-3xl font-bold text-primary">Welcome to NCA PREP!</h1>
           <p className="text-muted-foreground">Sign in to your account or register for a demo</p>
         </div>
 
